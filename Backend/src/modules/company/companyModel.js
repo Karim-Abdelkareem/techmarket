@@ -9,6 +9,14 @@ const companySchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  brife: {
+      type: String,
+    },
+  location: {
+    type: String,
+  }  
+  
+
 });
 
 const Company = mongoose.model("Company", companySchema);
