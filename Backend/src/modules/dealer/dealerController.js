@@ -1,6 +1,8 @@
 import expressAsyncHandler from "express-async-handler";
 import Dealer from "./dealerModel.js";
 
+//Do the Same Changes as in companyController.js
+
 // CREATE
 export const createDealer = expressAsyncHandler(async (req, res) => {
   const { name, brief, locationText, locationLink } = req.body;

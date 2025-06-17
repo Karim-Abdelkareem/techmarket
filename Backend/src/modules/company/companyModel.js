@@ -10,13 +10,11 @@ const companySchema = new mongoose.Schema({
     unique: true,
   },
   brife: {
-      type: String,
-    },
+    type: String,
+  },
   location: {
     type: String,
-  }  
-  
-
+  },
 });
 
 const Company = mongoose.model("Company", companySchema);

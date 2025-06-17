@@ -1,19 +1,25 @@
 import expressAsyncHandler from "express-async-handler";
 import Company from "./companyModel.js";
+import { AppError } from "../../utils/appError.js";
 
 // Create
-export const createCompany = expressAsyncHandler(async (req, res) => {
-  const { name, brief, location } = req.body;
+export const createCompany = expressAsyncHandler(async (req, res, next) => {
+  /*Spilling Her in brife was not rigth */
+  const { name, brife, location } = req.body;
   const logo = req.file?.path || null;
 
-  if (!name) {
-    res.status(400);
-    throw new Error("Company name is required");
+  // We Make Errors Like This To Ensure That All Required Fields Are Provided
+  if (!name || !brife || !location) {
+    next(
+      new AppError(
+        "Please provide all required fields: name, brief, and location"
+      )
+    );
   }
 
   const company = new Company({
     name,
-    brief,
+    brife,
     location,
     logo: logo || null,
   });
@@ -32,6 +38,7 @@ export const getAllCompanies = expressAsyncHandler(async (req, res) => {
 // Get One
 export const getCompanyById = expressAsyncHandler(async (req, res) => {
   const company = await Company.findById(req.params.id);
+  //Change the error her as told
   if (!company) {
     res.status(404);
     throw new Error("Company not found");
@@ -40,6 +47,7 @@ export const getCompanyById = expressAsyncHandler(async (req, res) => {
 });
 
 // Update
+//Search for findByIdAndUpdate method in mongoose
 export const updateCompany = expressAsyncHandler(async (req, res) => {
   const company = await Company.findById(req.params.id);
   if (!company) {
@@ -49,7 +57,7 @@ export const updateCompany = expressAsyncHandler(async (req, res) => {
 
   const logo = req.file?.path;
   company.name = req.body.name || company.name;
-  company.brief = req.body.brief || company.brief;
+  company.brife = req.body.brief || company.brife;
   company.location = req.body.location || company.location;
   company.logo = logo || company.logo;
 
@@ -59,6 +67,7 @@ export const updateCompany = expressAsyncHandler(async (req, res) => {
 });
 
 // Delete
+//Search for findByIdAndDelete method in mongoose
 export const deleteCompany = expressAsyncHandler(async (req, res) => {
   const company = await Company.findById(req.params.id);
   if (!company) {
