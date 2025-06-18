@@ -1,13 +1,13 @@
 import expressAsyncHandler from "express-async-handler";
 import Dealer from "./dealerModel.js";
+import { AppError } from "../../utils/appError.js";
 
 // CREATE
-export const createDealer = expressAsyncHandler(async (req, res) => {
+export const createDealer = expressAsyncHandler(async (req, res, next) => {
   const { name, brief, locationText, locationLink } = req.body;
 
   if (!name) {
-    res.status(400);
-    throw new Error("Dealer name is required");
+    return next(new AppError("Dealer name is required", 400));
   }
 
   const dealer = new Dealer({
@@ -38,59 +38,54 @@ export const getAllDealers = expressAsyncHandler(async (req, res) => {
 });
 
 // READ ONE
-export const getDealerById = expressAsyncHandler(async (req, res) => {
+export const getDealerById = expressAsyncHandler(async (req, res, next) => {
   const dealer = await Dealer.findById(req.params.id);
+
   if (!dealer) {
-    res.status(404);
-    throw new Error("Dealer not found");
+    return next(new AppError("Dealer not found", 404));
   }
+
   res.status(200).json({
     status: "success",
     data: { dealer },
   });
 });
 
-// UPDATE
-export const updateDealer = expressAsyncHandler(async (req, res) => {
+// UPDATE  by Id
+export const updateDealer = expressAsyncHandler(async (req, res, next) => {
   const { name, brief, locationText, locationLink } = req.body;
-  const dealer = await Dealer.findById(req.params.id);
 
-  if (!dealer) {
-    res.status(404);
-    throw new Error("Dealer not found");
+  const updatedDealer = await Dealer.findByIdAndUpdate(
+    req.params.id,
+    {
+      name,
+      brief,
+      location: {
+        text: locationText,
+        link: locationLink,
+      },
+      ...(req.file?.path && { logo: req.file.path }),
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedDealer) {
+    return next(new AppError("Dealer not found", 404));
   }
-
-  dealer.name = name || dealer.name;
-  dealer.brief = brief || dealer.brief;
-  dealer.location = {
-    text: locationText || dealer.location.text,
-    link: locationLink || dealer.location.link,
-  };
-
-  if (req.file) {
-    dealer.logo = req.file.path;
-  }
-
-  await dealer.save();
 
   res.status(200).json({
     status: "success",
-    data: { dealer },
+    data: { dealer: updatedDealer },
   });
 });
 
-// DELETE
-export const deleteDealer = expressAsyncHandler(async (req, res) => {
-  const dealer = await Dealer.findById(req.params.id);
-  if (!dealer) {
-    res.status(404);
-    throw new Error("Dealer not found");
+// DELETE By Id
+export const deleteDealer = expressAsyncHandler(async (req, res, next) => {
+  const deletedDealer = await Dealer.findByIdAndDelete(req.params.id);
+
+  if (!deletedDealer) {
+    return next(new AppError("Dealer not found", 404));
   }
 
-  await dealer.deleteOne();
-
-  res.status(200).json({
-    status: "success",
-    message: "Dealer deleted successfully",
-  });
+  res.status(204).end(); 
 });

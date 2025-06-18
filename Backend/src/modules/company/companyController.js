@@ -1,23 +1,22 @@
 import expressAsyncHandler from "express-async-handler";
 import Company from "./companyModel.js";
+import { AppError } from "../../utils/appError.js";
 
 // Create
-export const createCompany = expressAsyncHandler(async (req, res) => {
-  const { name, brief, location } = req.body;
+export const createCompany = expressAsyncHandler(async (req, res, next) => {
+  const { name, brife, location } = req.body;
   const logo = req.file?.path || null;
 
-  if (!name) {
-    res.status(400);
-    throw new Error("Company name is required");
+  if (!name || !brife || !location) {
+    return next(
+      new AppError(
+        "Please provide all required fields: name, brief, and location",
+        400
+      )
+    );
   }
 
-  const company = new Company({
-    name,
-    brief,
-    location,
-    logo: logo || null,
-  });
-
+  const company = new Company({ name, brife, location, logo });
   await company.save();
 
   res.status(201).json({ status: "success", data: { company } });
@@ -30,42 +29,45 @@ export const getAllCompanies = expressAsyncHandler(async (req, res) => {
 });
 
 // Get One
-export const getCompanyById = expressAsyncHandler(async (req, res) => {
+export const getCompanyById = expressAsyncHandler(async (req, res, next) => {
   const company = await Company.findById(req.params.id);
+
   if (!company) {
-    res.status(404);
-    throw new Error("Company not found");
+    return next(new AppError("Company not found", 404));
   }
+
   res.status(200).json({ status: "success", data: { company } });
 });
 
 // Update
-export const updateCompany = expressAsyncHandler(async (req, res) => {
-  const company = await Company.findById(req.params.id);
-  if (!company) {
-    res.status(404);
-    throw new Error("Company not found");
+export const updateCompany = expressAsyncHandler(async (req, res, next) => {
+  const logo = req.file?.path;
+
+  const updatedCompany = await Company.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+      brife: req.body.brief,
+      location: req.body.location,
+      ...(logo && { logo }),
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedCompany) {
+    return next(new AppError("Company not found", 404));
   }
 
-  const logo = req.file?.path;
-  company.name = req.body.name || company.name;
-  company.brief = req.body.brief || company.brief;
-  company.location = req.body.location || company.location;
-  company.logo = logo || company.logo;
-
-  const updated = await company.save();
-
-  res.status(200).json({ status: "success", data: { company: updated } });
+  res.status(200).json({ status: "success", data: { company: updatedCompany } });
 });
 
 // Delete
-export const deleteCompany = expressAsyncHandler(async (req, res) => {
-  const company = await Company.findById(req.params.id);
-  if (!company) {
-    res.status(404);
-    throw new Error("Company not found");
+export const deleteCompany = expressAsyncHandler(async (req, res, next) => {
+  const deletedCompany = await Company.findByIdAndDelete(req.params.id);
+
+  if (!deletedCompany) {
+    return next(new AppError("Company not found", 404));
   }
 
-  await company.deleteOne();
-  res.status(200).json({ status: "success", message: "Company deleted" });
-}); 
+  res.status(204).end(); 
+});
