@@ -3,7 +3,8 @@ import globalErrorHandler from "./src/middleware/globalErrorHandler.js";
 import authRouter from "./src/modules/auth/authRouter.js";
 import companyRouter from "./src/modules/company/companyRouter.js";
 import dealerRouter from "./src/modules/dealer/dealerRouter.js";
-import Dealer from "./src/modules/dealer/dealerModel.js";
+import categoryRouter from "./src/modules/category/categoryRouter.js";
+import mobilesRouter from "./src/modules/mobiles/mobilesRouter.js";
 
 export const init = (app) => {
   app.get("/", (req, res) => {
@@ -12,7 +13,9 @@ export const init = (app) => {
 
   app.use("/api/auth", authRouter);
   app.use("/api/compnay", companyRouter);
-  app.use("/api/dealer", dealerRouter)
+  app.use("/api/dealer", dealerRouter);
+  app.use("/api/category", categoryRouter);
+  app.use("/api/mobiles", mobilesRouter);
   app.all(/(.*)/, (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
   });
