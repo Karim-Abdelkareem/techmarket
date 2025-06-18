@@ -68,4 +68,4 @@ export const deleteCompany = expressAsyncHandler(async (req, res) => {
 
   await company.deleteOne();
   res.status(200).json({ status: "success", message: "Company deleted" });
-});
+}); 
