@@ -1,120 +1,91 @@
 import Category from "./CategoryModel.js";
 import expressAsyncHandler from "express-async-handler";
+import { AppError } from "../../utils/appError.js";
 
+// Create Category
 export const createCategory = expressAsyncHandler(async (req, res, next) => {
   const { name } = req.body;
+  const image = req.file?.path || null;
 
   if (!name) {
-    res.status(400);
-    throw new Error("Category name is required");
+    return next(new AppError("Category name is required", 400));
   }
 
-  const category = new Category({
-    name,
-    image: req.file?.path || null,
-  });
-
+  const category = new Category({ name, image });
   await category.save();
 
-  res.status(201).json({
-    status: "success",
-    data: { category },
-  });
+  res.status(201).json({ status: "success", data: { category } });
 });
 
+// Create Subcategory
 export const createSubCategory = expressAsyncHandler(async (req, res, next) => {
   const { name, parent } = req.body;
+  const image = req.file?.path || null;
 
   if (!name || !parent) {
-    res.status(400);
-    throw new Error("Name and parent category ID are required");
+    return next(new AppError("Name and parent category ID are required", 400));
   }
 
   const parentCategory = await Category.findById(parent);
   if (!parentCategory) {
-    res.status(404);
-    throw new Error("Parent category not found");
+    return next(new AppError("Parent category not found", 404));
   }
 
-  const subCategory = new Category({
-    name,
-    image: req.file?.path || null,
-    parent: parentCategory._id,
-  });
-
+  const subCategory = new Category({ name, image, parent: parentCategory._id });
   await subCategory.save();
 
-  res.status(201).json({
-    status: "success",
-    data: { subCategory },
-  });
+  res.status(201).json({ status: "success", data: { subCategory } });
 });
 
-export const getAllCategories = expressAsyncHandler(async (req, res, next) => {
-  const categories = await Category.find({ parent: null }).populate(
-    "subcategories"
-  );
+// Get All Categories (with subcategories)
+export const getAllCategories = expressAsyncHandler(async (req, res) => {
+  const categories = await Category.find({ parent: null }).populate("subcategories");
 
-  res.status(200).json({
-    status: "success",
-    data: { categories },
-  });
+  res.status(200).json({ status: "success", data: { categories } });
 });
 
+// Get Category by ID
 export const getCategoryById = expressAsyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id)
     .populate("parent", "name slug")
     .populate("subcategories");
 
   if (!category) {
-    res.status(404);
-    throw new Error("Category not found");
+    return next(new AppError("Category not found", 404));
   }
 
-  res.status(200).json({
-    status: "success",
-    data: { category },
-  });
+  res.status(200).json({ status: "success", data: { category } });
 });
 
+// Update Category
 export const updateCategory = expressAsyncHandler(async (req, res, next) => {
-  const { name, image, parent } = req.body;
+  const image = req.file?.path || req.body.image;
+  const { name, parent } = req.body;
+
   const category = await Category.findByIdAndUpdate(
     req.params.id,
-    {
-      name,
-      image: req.file?.path || image,
-      parent: parent || null,
-    },
-    { new: true }
+    { name, image, parent: parent || null },
+    { new: true, runValidators: true }
   );
 
   if (!category) {
-    res.status(404);
-    throw new Error("Category not found");
+    return next(new AppError("Category not found", 404));
   }
 
-  res.status(200).json({
-    status: "success",
-    data: { category },
-  });
+  res.status(200).json({ status: "success", data: { category } });
 });
+
 
 export const deleteCategory = expressAsyncHandler(async (req, res, next) => {
   const subcategories = await Category.find({ parent: req.params.id });
   if (subcategories.length > 0) {
-    res.status(400);
-    throw new Error("Cannot delete a category with subcategories");
+    return next(new AppError("Cannot delete a category with subcategories", 400));
   }
 
   const category = await Category.findByIdAndDelete(req.params.id);
   if (!category) {
-    res.status(404);
-    throw new Error("Category not found");
+    return next(new AppError("Category not found", 404));
   }
 
-  res.status(200).json({
-    status: "success",
-    message: "Category deleted successfully",
-  });
+  res.status(204).end(); // No content
 });
