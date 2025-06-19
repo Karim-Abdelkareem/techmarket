@@ -9,6 +9,7 @@ import accessoryRouter from "./src/modules/accessories/accessoryRouter.js";
 import wearableRouter from "./src/modules/wearable/wearableRouter.js";
 import audioRouter from "./src/modules/audio/audioRouter.js";
 import laptopRouter from "./src/modules/laptops/laptopRouter.js";
+import inquiryRouter from "./src/modules/inquiries/inquiryRouter.js";
 
 
 export const init = (app) => {
@@ -22,10 +23,10 @@ export const init = (app) => {
   app.use("/api/category", categoryRouter);
   app.use("/api/mobiles", mobilesRouter);
   app.use("/api/accessory", accessoryRouter);
-
   app.use("/api/wearables", wearableRouter);
   app.use("/api/audio", audioRouter);
   app.use("/api/laptops", laptopRouter);
+  app.use("/api/inquiries", inquiryRouter);
   app.all(/(.*)/, (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
   });
