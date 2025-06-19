@@ -13,6 +13,10 @@ const mobilesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
   },
+  subCategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
   name: {
     type: String,
     required: true,
@@ -26,7 +30,7 @@ const mobilesSchema = new mongoose.Schema({
     required: true,
   },
   simCard: {
-    type: Number,
+    type: String,
     required: true,
   },
   screen: {
@@ -37,7 +41,7 @@ const mobilesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  internalMerory: {
+  internalMemory: {
     type: String,
     required: true,
   },
@@ -73,7 +77,7 @@ const mobilesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  videoReslution: {
+  videoResolutions: {
     type: String,
     required: true,
   },

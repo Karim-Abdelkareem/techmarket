@@ -11,10 +11,6 @@ Router.route("/")
         maxCount: 1,
       },
       {
-        name: "video",
-        maxCount: 1,
-      },
-      {
         name: "images",
         maxCount: 6,
       },
@@ -39,5 +35,7 @@ Router.route("/:id")
     mobilesController.updateMobile
   )
   .delete(mobilesController.deleteMobile);
+
+Router.get("/sub/:id", mobilesController.findBySubCategoryId);
 
 export default Router;
