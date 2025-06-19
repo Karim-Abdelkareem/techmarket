@@ -1,17 +1,18 @@
 import express from "express";
 import * as accessoryController from "./accessoryController.js";
+import { upload } from "../../config/cloudinary.js";
 
 const router = express.Router();
 
 router
   .route("/")
-  .post(accessoryController.createAccessory)
+  .post(upload.single("image"), accessoryController.createAccessory)
   .get(accessoryController.getAllAccessories);
 
 router
   .route("/:id")
   .get(accessoryController.getAccessoryById)
-  .put(accessoryController.updateAccessory)
+  .put(upload.single("image"), accessoryController.updateAccessory)
   .delete(accessoryController.deleteAccessory);
 
 export default router;
