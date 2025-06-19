@@ -37,7 +37,7 @@ export const getInquiryById = expressAsyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "success", data: { inquiry } });
 });
 
-// Delete Inquiry
+// Delete Inquiry by Id
 export const deleteInquiry = expressAsyncHandler(async (req, res, next) => {
   const deleted = await Inquiry.findByIdAndDelete(req.params.id);
   if (!deleted) return next(new AppError("Inquiry not found", 404));
