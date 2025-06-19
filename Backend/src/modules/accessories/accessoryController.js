@@ -6,8 +6,6 @@ import { AppError } from "../../utils/appError.js";
 export const createAccessory = expressAsyncHandler(async (req, res, next) => {
   const accessory = new Accessory(req.body);
 
-  // Optional: validate required fields for each type if needed
-
   await accessory.save();
   res.status(201).json({
     status: "success",
