@@ -12,7 +12,8 @@ export const createCompany = expressAsyncHandler(async (req, res, next) => {
   if (!name || !brife || !location) {
     next(
       new AppError(
-        "Please provide all required fields: name, brief, and location"
+        "Please provide all required fields: name, brief, and location",
+        404
       )
     );
   }
