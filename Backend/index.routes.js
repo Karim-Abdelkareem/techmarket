@@ -5,6 +5,7 @@ import companyRouter from "./src/modules/company/companyRouter.js";
 import dealerRouter from "./src/modules/dealer/dealerRouter.js";
 import categoryRouter from "./src/modules/category/categoryRouter.js";
 import mobilesRouter from "./src/modules/mobiles/mobilesRouter.js";
+import accessoryRouter from "./src/modules/accessories/accessoryRouter.js";
 
 export const init = (app) => {
   app.get("/", (req, res) => {
@@ -16,6 +17,7 @@ export const init = (app) => {
   app.use("/api/dealer", dealerRouter);
   app.use("/api/category", categoryRouter);
   app.use("/api/mobiles", mobilesRouter);
+  app.use("/api/accessory", accessoryRouter);
   app.all(/(.*)/, (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
   });
