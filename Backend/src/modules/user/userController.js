@@ -4,14 +4,14 @@ import { AppError } from "../../utils/appError.js";
 import { Features } from "../../utils/features.js";
 
 export const createModerator = expressAsyncHandler(async (req, res, next) => {
-  const { email, password, name, brief, loctionText, locationLink } = req.body;
+  const { email, password, name, brief, locationText, locationLink } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     return next(new AppError("Email already exists", 400));
   }
   let logo;
-  if (req.file?.logo) {
-    logo = req.files.logo.path;
+  if (req.file) {
+    logo = req.files.path;
   }
 
   const newUser = await User.create({
@@ -20,8 +20,10 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
     name,
     logo,
     brief,
-    loctionText,
-    locationLink,
+    location: {
+      locationText,
+      locationLink,
+    },
     role: "moderator",
   });
   res
@@ -45,12 +47,12 @@ export const getAllUsers = expressAsyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: users,
     totalCount,
     totalPages,
     currentPage: features.page,
     limit: features.limit,
     hasNextPage,
+    data: users,
   });
 });
 
@@ -67,9 +69,11 @@ export const updateSingleUser = expressAsyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new AppError("No user found with that ID", 404));
   }
-  if (req.file?.logo) {
-    req.body.logo = req.file.logo.path;
+
+  if (req.file) {
+    req.body.logo = req.file.path;
   }
+
   const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
