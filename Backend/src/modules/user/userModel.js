@@ -26,6 +26,22 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin", "moderator"],
       default: "user",
     },
+    breif: {
+      type: String,
+    },
+    logo: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dlz30daw5/image/upload/v1750140703/cd4bd9b0ea2807611ba3a67c331bff0b_nloio1.jpg",
+    },
+    location: {
+      text: {
+        type: String,
+      },
+      link: {
+        type: String,
+      },
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -37,12 +53,6 @@ const userSchema = new mongoose.Schema(
     //   },
     // ],
     // wishlist: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Item",
-    //   },
-    // ],
-    // cart: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: "Item",
