@@ -32,7 +32,12 @@ export class Features {
         if (!mongoFilter[field]) mongoFilter[field] = {};
         mongoFilter[field][`$${operator}`] = filterObj[key];
       } else {
-        mongoFilter[key] = filterObj[key];
+        // Apply case-insensitive regex for any field
+        if (typeof filterObj[key] === "string") {
+          mongoFilter[key] = { $regex: new RegExp(`^${filterObj[key]}$`, "i") }; // Case-insensitive regex
+        } else {
+          mongoFilter[key] = filterObj[key]; // No regex for non-string fields
+        }
       }
     });
 
@@ -53,7 +58,7 @@ export class Features {
       const keyword = this.queryString.keyword;
       this.mongooseQuery = this.mongooseQuery.find({
         $or: [
-          { title: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
           { name: { $regex: keyword, $options: "i" } },
         ],
       });
