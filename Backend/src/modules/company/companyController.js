@@ -4,10 +4,10 @@ import { AppError } from "../../utils/appError.js";
 
 // Create
 export const createCompany = expressAsyncHandler(async (req, res, next) => {
-  const { name, brife, location } = req.body;
+  const { name, brief, location } = req.body;
   const logo = req.file?.path || null;
 
-  if (!name || !brife || !location) {
+  if (!name || !brief || !location) {
     return next(
       new AppError(
         "Please provide all required fields: name, brief, and location",
@@ -16,7 +16,7 @@ export const createCompany = expressAsyncHandler(async (req, res, next) => {
     );
   }
 
-  const company = new Company({ name, brife, location, logo });
+  const company = new Company({ name, brief, location, logo });
   await company.save();
 
   res.status(201).json({ status: "success", data: { company } });
@@ -47,7 +47,7 @@ export const updateCompany = expressAsyncHandler(async (req, res, next) => {
     req.params.id,
     {
       name: req.body.name,
-      brife: req.body.brief,
+      brief: req.body.brief,
       location: req.body.location,
       ...(logo && { logo }),
     },
@@ -58,7 +58,9 @@ export const updateCompany = expressAsyncHandler(async (req, res, next) => {
     return next(new AppError("Company not found", 404));
   }
 
-  res.status(200).json({ status: "success", data: { company: updatedCompany } });
+  res
+    .status(200)
+    .json({ status: "success", data: { company: updatedCompany } });
 });
 
 // Delete
@@ -69,5 +71,5 @@ export const deleteCompany = expressAsyncHandler(async (req, res, next) => {
     return next(new AppError("Company not found", 404));
   }
 
-  res.status(204).end(); 
+  res.status(204).end();
 });

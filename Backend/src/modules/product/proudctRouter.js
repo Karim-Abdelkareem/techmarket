@@ -1,6 +1,8 @@
 import express from "express";
 import * as productController from "./productController.js";
 import { upload } from "../../config/cloudinary.js";
+import { dynamicProductValidation } from "../../middleware/validate.js";
+import { protect, restrictTo } from "../../middleware/authorization.js";
 
 const router = express.Router();
 
@@ -18,12 +20,24 @@ const uploadFelds = [
 router
   .route("/")
   .get(productController.getProducts)
-  .post(upload.fields(uploadFelds), productController.createProudct);
+  .post(
+    protect,
+    restrictTo("moderator", "admin"),
+    upload.fields(uploadFelds),
+    dynamicProductValidation,
+    productController.createProudct
+  );
 
 router
   .route("/:id")
   .get(productController.getProductById)
-  .patch(upload.fields(uploadFelds), productController.updateProduct)
+  .patch(
+    protect,
+    restrictTo("moderator", "admin"),
+    upload.fields(uploadFelds),
+    dynamicProductValidation,
+    productController.updateProduct
+  )
   .delete(productController.deleteProduct);
 
 export default router;
