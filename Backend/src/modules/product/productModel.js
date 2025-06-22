@@ -14,7 +14,8 @@ const productSchema = new mongoose.Schema(
     },
     dealer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Dealer",
+      ref: "User",
+      required: true,
     },
     brand: {
       type: String,
@@ -52,6 +53,10 @@ const productSchema = new mongoose.Schema(
     isExclusive: {
       type: Boolean,
       default: false,
+    },
+    views: {
+      type: Number,
+      default: 0,
     },
   },
   {

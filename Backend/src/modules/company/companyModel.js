@@ -9,7 +9,7 @@ const companySchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  brife: {
+  brief: {
     type: String,
   },
   location: {

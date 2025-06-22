@@ -12,7 +12,6 @@ export const createProudct = expressAsyncHandler(async (req, res, next) => {
     price,
     category,
     productType,
-    dealer,
     description,
     company,
     quantity,
@@ -49,6 +48,8 @@ export const createProudct = expressAsyncHandler(async (req, res, next) => {
   if (req.files?.images?.length > 0) {
     images = req.files.images.map((file) => file.path);
   }
+
+  const dealer = req.user._id; // Assuming the dealer is the logged-in user
 
   const product = await Product.create({
     name,
@@ -100,6 +101,10 @@ export const getProductById = expressAsyncHandler(async (req, res, next) => {
     .populate("company");
   if (!product) {
     return next(new AppError("Product not found with this ID", 404));
+  }
+  if (req.user?.role !== "admin" && req.user?.role !== "dealer") {
+    product.views = (product.views || 0) + 1;
+    await product.save();
   }
   res.status(200).json({ status: "success", data: product });
 });
