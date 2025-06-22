@@ -25,18 +25,21 @@ export class Features {
     const mongoFilter = {};
 
     Object.keys(filterObj).forEach((key) => {
+      const value = filterObj[key];
+
       const match = key.match(/^(\w+)\[(gte|gt|lte|lt)\]$/);
       if (match) {
         const field = match[1];
         const operator = match[2];
         if (!mongoFilter[field]) mongoFilter[field] = {};
-        mongoFilter[field][`$${operator}`] = filterObj[key];
+        mongoFilter[field][`$${operator}`] = value;
       } else {
-        // Apply case-insensitive regex for any field
-        if (typeof filterObj[key] === "string") {
-          mongoFilter[key] = { $regex: new RegExp(`^${filterObj[key]}$`, "i") }; // Case-insensitive regex
+        if (Array.isArray(value)) {
+          mongoFilter[key] = { $in: value };
+        } else if (typeof value === "string" && value.includes(",")) {
+          mongoFilter[key] = { $in: value.split(",") };
         } else {
-          mongoFilter[key] = filterObj[key]; // No regex for non-string fields
+          mongoFilter[key] = { $regex: new RegExp(`^${value}$`, "i") };
         }
       }
     });
