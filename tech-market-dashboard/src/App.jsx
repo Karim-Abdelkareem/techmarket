@@ -9,7 +9,12 @@ import Dashboard from './components/Dashboard';
 import Unauthorized from './components/Unauthorized';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
+import AdminLayout from './layouts/AdminLayout';
 import CategoryPage from './components/dashboard/CategoryPage';
+
+// Admin Components
+import ModeratorList from './components/admin/ModeratorList';
+import CompanyList from './components/admin/CompanyList';
 
 // Create a client for React Query
 const queryClient = new QueryClient();
@@ -40,13 +45,14 @@ function App() {
                 path="/admin" 
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <div className="p-8">
-                      <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
-                      <p>This page is only accessible to admin users.</p>
-                    </div>
+                    <AdminLayout />
                   </ProtectedRoute>
                 } 
-              />
+              >
+                <Route index element={<ModeratorList />} />
+                <Route path="moderators" element={<ModeratorList />} />
+                <Route path="companies" element={<CompanyList />} />
+              </Route>
             </Routes>
           </div>
         </Router>
