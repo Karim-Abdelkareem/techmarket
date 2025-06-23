@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/dashboard/Sidebar';
-import DashboardHeader from '../components/dashboard/DashboardHeader';
+import { Menu } from 'lucide-react';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,25 +41,31 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-100">
+      {/* Mobile menu button */}
+      <button
+        onClick={toggleSidebar}
+        className="lg:hidden fixed top-4 left-4 z-30 p-2 rounded-md bg-white shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <Menu className="h-6 w-6 text-gray-600" />
+      </button>
+
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block`}>
-        <Sidebar />
+      <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block fixed inset-y-0 left-0 z-20 lg:relative lg:z-0`}>
+        <Sidebar user={currentUser} onLogout={handleLogout} />
       </div>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
           onClick={toggleSidebar}
         />
       )}
 
       {/* Main content area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader toggleSidebar={toggleSidebar} user={currentUser} onLogout={handleLogout} />
-
-        <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        <main className="flex-1 overflow-auto p-6 pt-16 lg:pt-6">
           <Outlet />
         </main>
       </div>
