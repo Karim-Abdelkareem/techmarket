@@ -8,18 +8,26 @@ export default function AddCableForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Set default discount to 0 if not provided
+    // Only include the specific fields required
     const finalData = {
-      ...data,
-      discount: data.discount || 0,
+      name: data.name,
+      category: 'Accessories',
       productType: 'Cable',
-      category: 'Accessories'
+      productCode: data.productCode,
+      referralCode: data.referralCode,
+      price: data.price,
+      description: data.description,
+      quantity: data.quantity,
+      brand: data.brand,
+      from: data.from,
+      to: data.to,
+      cableLength: data.cableLength,
+      cableType: data.cableType
     };
     
     // Handle features as array
-    if (finalData.features) {
-      const featuresArray = finalData.features.split(',').map(item => item.trim());
-      delete finalData.features;
+    if (data.features) {
+      const featuresArray = data.features.split(',').map(item => item.trim());
       featuresArray.forEach((feature, index) => {
         formData.append(`features[${index}]`, feature);
       });
@@ -27,7 +35,9 @@ export default function AddCableForm() {
     
     // Append all form data
     Object.entries(finalData).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
     });
     
     // Handle image files
@@ -87,15 +97,13 @@ export default function AddCableForm() {
           ['Product Code', 'productCode'],
           ['Referral Code', 'referralCode'],
           ['Brand', 'brand'],
+          ['From', 'from'],
+          ['To', 'to'],
+          ['Cable Length', 'cableLength'],
           ['Cable Type', 'cableType'],
-          ['Length', 'length'],
-          ['Connector Type', 'connectorType'],
-          ['Color', 'color'],
-          ['Compatible With', 'compatibleWith'],
           ['Description', 'description', 'textarea'],
           ['Price', 'price', 'number'],
           ['Quantity', 'quantity', 'number'],
-          ['Discount', 'discount', 'number'],
         ].map(([label, name, type = 'text']) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>

@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 
-export default function UpdateMobileForm({ product, onClose }) {
+export default function UpdateWearableForm({ product, onClose }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,32 +12,20 @@ export default function UpdateMobileForm({ product, onClose }) {
       // Reset form with product data
       reset({
         name: product.name || '',
-        category: product.category || '',
-        productType: product.productType || '',
         productCode: product.productCode || '',
         referralCode: product.referralCode || '',
         brand: product.brand || '',
-        deviceType: product.deviceType || '',
+        wearableType: product.wearableType || '',
         description: product.description || '',
+        display: product.display || '',
         color: product.color || '',
-        simCard: product.simCard || '',
-        screen: product.screen || '',
-        ram: product.ram || '',
-        internalMemory: product.internalMemory || '',
-        rearCamera: product.rearCamera || '',
-        selfieCamera: product.selfieCamera || '',
-        chipset: product.chipset || '',
-        cpu: product.cpu || '',
-        cpuSpeedGHz: product.cpuSpeedGHz || '',
-        gpu: product.gpu || '',
-        operatingSystem: product.operatingSystem || '',
-        productWarranty: product.productWarranty || '',
-        videoResolutions: product.videoResolutions || '',
         connectivity: product.connectivity || '',
-        sensor: product.sensor || '',
+        battery: product.battery || '',
+        warranty: product.warranty || '',
         price: product.price || '',
         quantity: product.quantity || '',
-        discount: product.discount || 0
+        discount: product.discount || 0,
+        features: product.features ? product.features.join(', ') : ''
       });
     }
   }, [product, reset]);
@@ -46,11 +34,22 @@ export default function UpdateMobileForm({ product, onClose }) {
     setLoading(true);
     const formData = new FormData();
     
-    // Set default discount to 0 if not provided
     const finalData = {
       ...data,
-      discount: data.discount || 0
+      discount: data.discount || 0,
+      category: 'Wearables',
+      productType: 'Wearable', 
+      wearableType: data.wearableType,
+      price: data.price.toString().replace(/,/g, '') 
     };
+    
+    if (finalData.features) {
+      const featuresArray = finalData.features.split(',').map(item => item.trim());
+      delete finalData.features;
+      featuresArray.forEach((feature, index) => {
+        formData.append(`features[${index}]`, feature);
+      });
+    }
     
     // Append all form data
     Object.entries(finalData).forEach(([key, value]) => {
@@ -71,7 +70,7 @@ export default function UpdateMobileForm({ product, onClose }) {
     const token = localStorage.getItem('token'); 
 
     try {
-      console.log('Updating product data...');
+      console.log('Updating wearable data...');
       const response = await fetch(`http://127.0.0.1:3000/api/product/${product._id}`, {
         method: 'PATCH',
         body: formData,
@@ -83,7 +82,7 @@ export default function UpdateMobileForm({ product, onClose }) {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('Server response:', errorData);
-        throw new Error(`Failed to update mobile: ${errorData.message || response.statusText}`);
+        throw new Error(`Failed to update wearable: ${errorData.message || response.statusText}`);
       }
       
       const result = await response.json();
@@ -111,57 +110,66 @@ export default function UpdateMobileForm({ product, onClose }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-8xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Update Mobile</h2>
+      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Update Wearable</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name'],
-          ['Category', 'category'],
-          ['Product Type', 'productType'],
-          ['Product Code', 'productCode'],
-          ['Referral Code', 'referralCode'],
-          ['Brand', 'brand'],
-          ['Device Type', 'deviceType'],
-          ['Description', 'description', 'textarea'],
-          ['Color', 'color'],
-          ['SIM Card', 'simCard'],
-          ['Screen', 'screen'],
-          ['RAM', 'ram'],
-          ['Internal Memory', 'internalMemory'],
-          ['Rear Camera', 'rearCamera'],
-          ['Selfie Camera', 'selfieCamera'],
-          ['Chipset', 'chipset'],
-          ['CPU', 'cpu'],
-          ['CPU Speed (GHz)', 'cpuSpeedGHz'],
-          ['GPU', 'gpu'],
-          ['Operating System', 'operatingSystem'],
-          ['Product Warranty', 'productWarranty'],
-          ['Video Resolutions', 'videoResolutions'],
-          ['Connectivity', 'connectivity'],
-          ['Sensor', 'sensor'],
-          ['Price', 'price', 'number'],
-          ['Quantity', 'quantity', 'number'],
-          ['Discount', 'discount', 'number'],
-        ].map(([label, name, type = 'text']) => (
+          ['Name', 'name', { required: true }, 'text'],
+          ['Product Code', 'productCode', { required: true }, 'text'],
+          ['Referral Code', 'referralCode', {}, 'text'],
+          ['Brand', 'brand', { required: true }, 'text'],
+          ['Wearable Type', 'wearableType', { required: true }, 'select', [
+            ['Smart Bands', 'SmartBand'],
+            ['Smart Watch', 'SmartWatch']
+          ]],
+          ['Description', 'description', { required: true }, 'textarea'],
+          ['Display', 'display', { required: true }, 'text'],
+          ['Color', 'color', { required: true }, 'text'],
+          ['Connectivity', 'connectivity', { required: true }, 'text'],
+          ['Battery', 'battery', { required: true }, 'text'],
+          ['Warranty', 'warranty', { required: true }, 'text'],
+          ['Price', 'price', { required: true, pattern: /^[0-9,]+$/ }, 'text'],
+          ['Quantity', 'quantity', { required: true, valueAsNumber: true }, 'number'],
+          ['Discount', 'discount', { valueAsNumber: true }, 'number'],
+        ].map(([label, name, validation, type, options]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>
             {type === 'textarea' ? (
               <textarea 
-                {...register(name, { required: true })}
+                {...register(name, validation)}
                 className="mt-1 p-2 border rounded-md" 
               />
+            ) : type === 'select' ? (
+              <select 
+                {...register(name, validation)}
+                className="mt-1 p-2 border rounded-md"
+              >
+                <option value="">Select {label}</option>
+                {options.map(([optionLabel, optionValue]) => (
+                  <option key={optionValue} value={optionValue}>{optionLabel}</option>
+                ))}
+              </select>
             ) : (
               <input 
                 type={type} 
-                {...register(name, { 
-                  required: name !== 'discount',
-                  valueAsNumber: type === 'number'
-                })}
+                {...register(name, validation)}
                 className="mt-1 p-2 border rounded-md" 
               />
             )}
-            {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}
+            {errors[name]?.type === 'required' && <span className="text-sm text-red-500 mt-1">This field is required</span>}
+            {errors[name]?.type === 'pattern' && <span className="text-sm text-red-500 mt-1">Please enter a valid price</span>}
           </div>
         ))}
+      </div>
+
+      {/* Features Section */}
+      <div className="col-span-2">
+        <label className="text-sm font-medium text-gray-600">Features (comma separated)</label>
+        <textarea
+          {...register('features')}
+          placeholder="Enter features separated by commas"
+          className="mt-1 p-2 border rounded-md w-full"
+          rows="3"
+        />
       </div>
 
       {/* Images Section */}
@@ -251,7 +259,7 @@ export default function UpdateMobileForm({ product, onClose }) {
           disabled={loading}
           className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md transition disabled:bg-blue-400 disabled:cursor-not-allowed"
         >
-          {loading ? 'Updating...' : 'Update Mobile'}
+          {loading ? 'Updating...' : 'Update Wearable'}
         </button>
       </div>
     </form>

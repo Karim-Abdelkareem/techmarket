@@ -118,7 +118,7 @@ export default function UpdateLaptopForm({ product, onClose }) {
     try {
       console.log('Updating laptop data...');
       const response = await fetch(`http://127.0.0.1:3000/api/product/${product._id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         body: submitData,
         headers: {
           Authorization: token,

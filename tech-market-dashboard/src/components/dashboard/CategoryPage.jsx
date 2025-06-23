@@ -1,7 +1,7 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { categoryConfig } from "../../config/categoryConfig";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 import AddLaptopForm from '../../forms/AddLaptopForm';
 import AddMobileForm from '../../forms/AddMobileForm';
 import AddAccessoryForm from '../../forms/AddAccessoryForm';
@@ -15,6 +15,11 @@ import AddOverEarForm from '../../forms/AddOverEarForm';
 import AddInEarForm from '../../forms/AddInEarForm';
 import AddWirelessForm from '../../forms/AddWirelessForm';
 import AddWearableForm from '../../forms/AddWearableForm';
+import UpdateLaptopForm from '../../forms/UpdateLaptopForm';
+import UpdateMobileForm from '../../forms/UpdateMobileForm';
+import UpdateCableForm from '../../forms/UpdateCableForm';
+import UpdateAudioForm from '../../forms/UpdateAudioForm';
+import UpdateWearableForm from '../../forms/UpdateWearableForm';
 import Modal from '../Modal';
 
 const CategoryPage = () => {
@@ -24,6 +29,9 @@ const CategoryPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [modalType, setModalType] = useState('add'); // 'add' or 'update'
 
     const buildQueryParams = (main, sub) => {
         const params = new URLSearchParams();
@@ -69,6 +77,41 @@ const CategoryPage = () => {
     };
 
     const renderForm = () => {
+        // If we're updating a product, render the appropriate update form
+        if (modalType === 'update' && selectedProduct) {
+            switch (selectedProduct.productType) {
+                case 'Laptop':
+                    return <UpdateLaptopForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'MobileTablet':
+                    return <UpdateMobileForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'Cable':
+                    return <UpdateCableForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'Audio':
+                    return <UpdateAudioForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'Wearable':
+                    return <UpdateWearableForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                // Add more update forms for other product types as needed
+                default:
+                    return <p>No update form available for this product type.</p>;
+            }
+        }
+        
+        // Otherwise, render the add form based on the category
         switch (main) {
             case 'laptops':
                 return <AddLaptopForm />;
@@ -109,11 +152,21 @@ const CategoryPage = () => {
     };
 
     const handleAddProductClick = () => {
+        setModalType('add');
+        setIsModalOpen(true);
+    };
+
+    const handleUpdateProductClick = (product) => {
+        setSelectedProduct(product);
+        setModalType('update');
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+        if (modalType === 'update') {
+            setSelectedProduct(null);
+        }
     };
     
   const handleDeleteProduct = async (productId) => {
@@ -215,13 +268,22 @@ const CategoryPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {products.map(product => (
                     <div key={product._id} className="border rounded-lg p-4 shadow-sm relative">
-                        <button 
-                            onClick={() => handleDeleteProduct(product._id)}
-                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-700 transition"
-                            title="Delete Product"
-                        >
-                            <FaTrash size={14} />
-                        </button>
+                        <div className="absolute top-2 right-2 flex space-x-2">
+                            <button 
+                                onClick={() => handleUpdateProductClick(product)}
+                                className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700 transition"
+                                title="Update Product"
+                            >
+                                <FaEdit size={14} />
+                            </button>
+                            <button 
+                                onClick={() => handleDeleteProduct(product._id)}
+                                className="bg-red-500 text-white p-2 rounded-full hover:bg-red-700 transition"
+                                title="Delete Product"
+                            >
+                                <FaTrash size={14} />
+                            </button>
+                        </div>
                         <img 
                             src={product.image || 'https://via.placeholder.com/300'} 
                             alt={product.name}
