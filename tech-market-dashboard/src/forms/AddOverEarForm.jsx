@@ -22,13 +22,19 @@ export default function AddOverEarForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Set default discount to 0 if not provided
+    // Set default values for optional fields
     const finalData = {
       ...data,
       discount: data.discount || 0,
       productType: 'Audio',
       category: 'Audio',
-      audioType: 'OverEar'
+      audioType: 'OverEar',
+      productCode: data.productCode || 'N/A',
+      brand: data.brand || 'N/A',
+      color: data.color || 'N/A',
+      connectivity: data.connectivity || 'N/A',
+      warranty: data.warranty || 'N/A',
+      description: data.description || 'N/A'
     };
     
     // Handle features as array
@@ -98,24 +104,25 @@ export default function AddOverEarForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Over-Ear Headphones</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name'],
-          ['Product Code', 'productCode'],
-          ['Referral Code', 'referralCode'],
-          ['Brand', 'brand'],
-          ['Color', 'color'],
-          ['Connectivity', 'connectivity'],
-          ['Warranty', 'warranty'],
-          ['Description', 'description', 'textarea'],
-          ['Price', 'price', 'number'],
-          ['Quantity', 'quantity', 'number'],
-          ['Discount', 'discount', 'number'],
-        ].map(([label, name, type = 'text']) => (
+          ['Name*', 'name', 'text', true],
+          ['Product Code', 'productCode', 'text', false],
+          ['Referral Code*', 'referralCode', 'text', true],
+          ['Brand', 'brand', 'text', false],
+          ['Color', 'color', 'text', false],
+          ['Connectivity', 'connectivity', 'text', false],
+          ['Warranty', 'warranty', 'text', false],
+          ['Description', 'description', 'textarea', false],
+          ['Price*', 'price', 'number', true],
+          ['Quantity*', 'quantity', 'number', true],
+          ['Discount', 'discount', 'number', false],
+        ].map(([label, name, type = 'text', isRequired = false]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>
             {type === 'textarea' ? (
               <textarea 
-                {...register(name, { required: name !== 'discount' && name !== 'referralCode' })}
+                {...register(name, { required: isRequired })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder="N/A"
               />
             ) : type === 'checkbox' ? (
               <div className="mt-1">
@@ -130,10 +137,11 @@ export default function AddOverEarForm() {
               <input 
                 type={type} 
                 {...register(name, { 
-                  required: name !== 'discount' && name !== 'referralCode',
+                  required: isRequired,
                   valueAsNumber: type === 'number'
                 })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!isRequired ? "N/A" : ""}
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}

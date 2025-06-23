@@ -9,22 +9,22 @@ export default function AddPowerBankForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Prepare the product data
+    // Prepare the product data with default values for optional fields
     const productData = {
       name: data.name,
       category: 'Accessories',
       productType: 'PowerBank',
-      productCode: data.productCode,
+      productCode: data.productCode || 'N/A',
       referralCode: data.referralCode,
       price: data.price,
-      description: data.description,
+      description: data.description || 'N/A',
       quantity: data.quantity,
-      brand: data.brand,
-      capacity: data.capacity,
-      input: data.input,
-      output: data.output,
-      color: data.color,
-      powerBankType: data.powerBankType,
+      brand: data.brand || 'N/A',
+      capacity: data.capacity || 'N/A',
+      input: data.input || 'N/A',
+      output: data.output || 'N/A',
+      color: data.color || 'N/A',
+      powerBankType: data.powerBankType || 'N/A',
       discount: data.discount || 0
     };
 
@@ -99,19 +99,19 @@ export default function AddPowerBankForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Power Bank</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name', 'text', true],
-          ['Product Code', 'productCode', 'text', true,],
-          ['Referral Code', 'referralCode', 'text', false, ],
-          ['Brand', 'brand', 'text', true, ],
-          ['Capacity', 'capacity', 'text', true,],
-          ['Input', 'input', 'text', true, ],
-          ['Output', 'output', 'text', true, ],
-          ['Color', 'color', 'text', true,],
-          ['Power Bank Type', 'powerBankType', 'text', true, ],
-          ['Description', 'description', 'textarea', true, ],
-          ['Price', 'price', 'number', true, ],
-          ['Quantity', 'quantity', 'number', true, ],
-          ['Discount', 'discount', 'number', false, ],
+          ['Name*', 'name', 'text', true],
+          ['Product Code', 'productCode', 'text', false],
+          ['Referral Code*', 'referralCode', 'text', true],
+          ['Brand', 'brand', 'text', false],
+          ['Capacity', 'capacity', 'text', false],
+          ['Input', 'input', 'text', false],
+          ['Output', 'output', 'text', false],
+          ['Color', 'color', 'text', false],
+          ['Power Bank Type', 'powerBankType', 'text', false],
+          ['Description', 'description', 'textarea', false],
+          ['Price*', 'price', 'number', true],
+          ['Quantity*', 'quantity', 'number', true],
+          ['Discount', 'discount', 'number', false],
         ].map(([label, name, type = 'text', isRequired, defaultValue]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">
@@ -123,6 +123,7 @@ export default function AddPowerBankForm() {
                 {...register(name, { required: isRequired })}
                 className="mt-1 p-2 border rounded-md" 
                 defaultValue={defaultValue}
+                placeholder="N/A"
               />
             ) : (
               <input 
@@ -133,6 +134,7 @@ export default function AddPowerBankForm() {
                 })}
                 className="mt-1 p-2 border rounded-md" 
                 defaultValue={defaultValue}
+                placeholder={!isRequired ? "N/A" : ""}
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}

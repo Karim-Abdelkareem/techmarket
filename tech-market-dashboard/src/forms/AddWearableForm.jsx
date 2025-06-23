@@ -13,8 +13,16 @@ export default function AddWearableForm() {
       discount: data.discount || 0,
       category: 'Wearables',
       productType: 'Wearable', 
-      wearableType: data.wearableType,
-      price: data.price.toString().replace(/,/g, '') 
+      wearableType: data.wearableType || 'N/A',
+      price: data.price.toString().replace(/,/g, ''),
+      productCode: data.productCode || 'N/A',
+      brand: data.brand || 'N/A',
+      description: data.description || 'N/A',
+      display: data.display || 'N/A',
+      color: data.color || 'N/A',
+      connectivity: data.connectivity || 'N/A',
+      battery: data.battery || 'N/A',
+      warranty: data.warranty || 'N/A'
     };
     
     if (finalData.features) {
@@ -83,22 +91,22 @@ export default function AddWearableForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Wearable</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name', { required: true }, 'text'],
-          ['Product Code', 'productCode', { required: true }, 'text'],
-          ['Referral Code', 'referralCode', {}, 'text'],
-          ['Brand', 'brand', { required: true }, 'text'],
-          ['Wearable Type', 'wearableType', { required: true }, 'select', [
+          ['Name*', 'name', { required: true }, 'text'],
+          ['Product Code', 'productCode', { required: false }, 'text'],
+          ['Referral Code*', 'referralCode', { required: true }, 'text'],
+          ['Brand', 'brand', { required: false }, 'text'],
+          ['Wearable Type', 'wearableType', { required: false }, 'select', [
             ['Smart Bands', 'SmartBand'],
             ['Smart Watch', 'SmartWatch']
           ]],
-          ['Description', 'description', { required: true }, 'textarea'],
-          ['Display', 'display', { required: true }, 'text'],
-          ['Color', 'color', { required: true }, 'text'],
-          ['Connectivity', 'connectivity', { required: true }, 'text'],
-          ['Battery', 'battery', { required: true }, 'text'],
-          ['Warranty', 'warranty', { required: true }, 'text'],
-          ['Price', 'price', { required: true, pattern: /^[0-9,]+$/ }, 'text'],
-          ['Quantity', 'quantity', { required: true, valueAsNumber: true }, 'number'],
+          ['Description', 'description', { required: false }, 'textarea'],
+          ['Display', 'display', { required: false }, 'text'],
+          ['Color', 'color', { required: false }, 'text'],
+          ['Connectivity', 'connectivity', { required: false }, 'text'],
+          ['Battery', 'battery', { required: false }, 'text'],
+          ['Warranty', 'warranty', { required: false }, 'text'],
+          ['Price*', 'price', { required: true, pattern: /^[0-9,]+$/ }, 'text'],
+          ['Quantity*', 'quantity', { required: true, valueAsNumber: true }, 'number'],
           ['Discount', 'discount', { valueAsNumber: true }, 'number'],
         ].map(([label, name, validation, type, options]) => (
           <div key={name} className="flex flex-col">
@@ -107,6 +115,7 @@ export default function AddWearableForm() {
               <textarea 
                 {...register(name, validation)}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!validation.required ? "N/A" : ""}
               />
             ) : type === 'select' ? (
               <select 
@@ -123,6 +132,7 @@ export default function AddWearableForm() {
                 type={type} 
                 {...register(name, validation)}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!validation.required ? "N/A" : ""}
               />
             )}
             {errors[name]?.type === 'required' && <span className="text-sm text-red-500 mt-1">This field is required</span>}
@@ -152,7 +162,6 @@ export default function AddWearableForm() {
               name="image"
               onChange={handleImageChange} 
               className="block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer" 
-              required
             />
           </div>
           <div>

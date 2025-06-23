@@ -13,16 +13,16 @@ export default function AddCableForm() {
       name: data.name,
       category: 'Accessories',
       productType: 'Cable',
-      productCode: data.productCode,
+      productCode: data.productCode || 'N/A',
       referralCode: data.referralCode,
       price: data.price,
-      description: data.description,
+      description: data.description || 'N/A',
       quantity: data.quantity,
-      brand: data.brand,
-      from: data.from,
-      to: data.to,
-      cableLength: data.cableLength,
-      cableType: data.cableType
+      brand: data.brand || 'N/A',
+      from: data.from || 'N/A',
+      to: data.to || 'N/A',
+      cableLength: data.cableLength || 'N/A',
+      cableType: data.cableType || 'N/A'
     };
     
     // Handle features as array
@@ -93,18 +93,18 @@ export default function AddCableForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Cable</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name'],
-          ['Product Code', 'productCode'],
-          ['Referral Code', 'referralCode'],
-          ['Brand', 'brand'],
-          ['From', 'from'],
-          ['To', 'to'],
-          ['Cable Length', 'cableLength'],
-          ['Cable Type', 'cableType'],
-          ['Description', 'description', 'textarea'],
-          ['Price', 'price', 'number'],
-          ['Quantity', 'quantity', 'number'],
-        ].map(([label, name, type = 'text']) => (
+          ['Name*', 'name', 'text', true],
+          ['Product Code', 'productCode', 'text', false],
+          ['Referral Code*', 'referralCode', 'text', true],
+          ['Brand', 'brand', 'text', false],
+          ['From', 'from', 'text', false],
+          ['To', 'to', 'text', false],
+          ['Cable Length', 'cableLength', 'text', false],
+          ['Cable Type', 'cableType', 'text', false],
+          ['Description', 'description', 'textarea', false],
+          ['Price*', 'price', 'number', true],
+          ['Quantity*', 'quantity', 'number', true],
+        ].map(([label, name, type = 'text', isRequired = false]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>
             {type === 'textarea' ? (
@@ -116,10 +116,11 @@ export default function AddCableForm() {
               <input 
                 type={type} 
                 {...register(name, { 
-                  required: name !== 'discount' && name !== 'referralCode',
+                  required: isRequired,
                   valueAsNumber: type === 'number'
                 })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!isRequired ? "N/A" : ""}
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}

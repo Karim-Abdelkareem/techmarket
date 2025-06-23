@@ -8,10 +8,32 @@ export default function AddMobileForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Set default discount to 0 if not provided
+    // Set default values for optional fields
     const finalData = {
       ...data,
-      discount: data.discount || 0
+      discount: data.discount || 0,
+      category: data.category || 'N/A',
+      productType: data.productType || 'Mobile',
+      productCode: data.productCode || 'N/A',
+      brand: data.brand || 'N/A',
+      deviceType: data.deviceType || 'N/A',
+      description: data.description || 'N/A',
+      color: data.color || 'N/A',
+      simCard: data.simCard || 'N/A',
+      screen: data.screen || 'N/A',
+      ram: data.ram || 'N/A',
+      internalMemory: data.internalMemory || 'N/A',
+      rearCamera: data.rearCamera || 'N/A',
+      selfieCamera: data.selfieCamera || 'N/A',
+      chipset: data.chipset || 'N/A',
+      cpu: data.cpu || 'N/A',
+      cpuSpeedGHz: data.cpuSpeedGHz || 'N/A',
+      gpu: data.gpu || 'N/A',
+      operatingSystem: data.operatingSystem || 'N/A',
+      productWarranty: data.productWarranty || 'N/A',
+      videoResolutions: data.videoResolutions || 'N/A',
+      connectivity: data.connectivity || 'N/A',
+      sensor: data.sensor || 'N/A'
     };
     
     // Append all form data
@@ -72,49 +94,51 @@ export default function AddMobileForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Mobile</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name'],
-          ['Category', 'category'],
-          ['Product Type', 'productType'],
-          ['Product Code', 'productCode'],
-          ['Referral Code', 'referralCode'],
-          ['Brand', 'brand'],
-          ['Device Type', 'deviceType'],
-          ['Description', 'description', 'textarea'],
-          ['Color', 'color'],
-          ['SIM Card', 'simCard'],
-          ['Screen', 'screen'],
-          ['RAM', 'ram'],
-          ['Internal Memory', 'internalMemory'],
-          ['Rear Camera', 'rearCamera'],
-          ['Selfie Camera', 'selfieCamera'],
-          ['Chipset', 'chipset'],
-          ['CPU', 'cpu'],
-          ['CPU Speed (GHz)', 'cpuSpeedGHz'],
-          ['GPU', 'gpu'],
-          ['Operating System', 'operatingSystem'],
-          ['Product Warranty', 'productWarranty'],
-          ['Video Resolutions', 'videoResolutions'],
-          ['Connectivity', 'connectivity'],
-          ['Sensor', 'sensor'],
-          ['Price', 'price', 'number'],
-          ['Quantity', 'quantity', 'number'],
-          ['Discount', 'discount', 'number'],
-        ].map(([label, name, type = 'text']) => (
+          ['Name*', 'name', 'text', true],
+          ['Category', 'category', 'text', false],
+          ['Product Type', 'productType', 'text', false],
+          ['Product Code', 'productCode', 'text', false],
+          ['Referral Code*', 'referralCode', 'text', true],
+          ['Brand', 'brand', 'text', false],
+          ['Device Type', 'deviceType', 'text', false],
+          ['Description', 'description', 'textarea', false],
+          ['Color', 'color', 'text', false],
+          ['SIM Card', 'simCard', 'text', false],
+          ['Screen', 'screen', 'text', false],
+          ['RAM', 'ram', 'text', false],
+          ['Internal Memory', 'internalMemory', 'text', false],
+          ['Rear Camera', 'rearCamera', 'text', false],
+          ['Selfie Camera', 'selfieCamera', 'text', false],
+          ['Chipset', 'chipset', 'text', false],
+          ['CPU', 'cpu', 'text', false],
+          ['CPU Speed (GHz)', 'cpuSpeedGHz', 'text', false],
+          ['GPU', 'gpu', 'text', false],
+          ['Operating System', 'operatingSystem', 'text', false],
+          ['Product Warranty', 'productWarranty', 'text', false],
+          ['Video Resolutions', 'videoResolutions', 'text', false],
+          ['Connectivity', 'connectivity', 'text', false],
+          ['Sensor', 'sensor', 'text', false],
+          ['Price*', 'price', 'number', true],
+          ['Quantity*', 'quantity', 'number', true],
+          ['Discount', 'discount', 'number', false],
+        ].map(([label, name, type = 'text', isRequired = false]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>
             {type === 'textarea' ? (
               <textarea 
-                {...register(name, { required: true })}
+                {...register(name, { required: isRequired })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder="N/A"
               />
             ) : (
               <input 
                 type={type} 
                 {...register(name, { 
-                  required: name !== 'discount',
+                  required: isRequired,
                   valueAsNumber: type === 'number'
                 })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!isRequired ? "N/A" : ""}
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}

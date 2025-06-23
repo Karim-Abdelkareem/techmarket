@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 export default function AddLaptopForm() {
   const [formData, setFormData] = useState({
     name: '',
-    category: '',
-    productType: '',
+    category: 'Laptop',
+    productType: 'Laptop',
     productCode: '',
     referralCode: '',
     brand: '',
@@ -46,7 +46,7 @@ export default function AddLaptopForm() {
 
   const validateForm = () => {
     const newErrors = {};
-    const requiredFields = ['name', 'category', 'productType', 'productCode', 'referralCode', 'brand', 'price', 'description', 'color', 'warranty', 'quantity', 'processor', 'ram', 'hardDisk', 'graphicsCard', 'display', 'connectivity', 'speaker', 'ioPorts', 'operatingSystem', 'laptopType'];
+    const requiredFields = ['name', 'referralCode', 'price', 'quantity'];
     
     requiredFields.forEach(field => {
       if (!formData[field] || formData[field].toString().trim() === '') {
@@ -67,8 +67,28 @@ export default function AddLaptopForm() {
 
     const submitData = new FormData();
     
+    // Set default values for optional fields
+    const finalData = {
+      ...formData,
+      brand: formData.brand || 'N/A',
+      productCode: formData.productCode || 'N/A',
+      description: formData.description || 'N/A',
+      color: formData.color || 'N/A',
+      warranty: formData.warranty || 'N/A',
+      processor: formData.processor || 'N/A',
+      ram: formData.ram || 'N/A',
+      hardDisk: formData.hardDisk || 'N/A',
+      graphicsCard: formData.graphicsCard || 'N/A',
+      display: formData.display || 'N/A',
+      connectivity: formData.connectivity || 'N/A',
+      speaker: formData.speaker || 'N/A',
+      ioPorts: formData.ioPorts || 'N/A',
+      operatingSystem: formData.operatingSystem || 'N/A',
+      laptopType: formData.laptopType || 'N/A'
+    };
+    
     // Append all form data
-    Object.entries(formData).forEach(([key, value]) => {
+    Object.entries(finalData).forEach(([key, value]) => {
       submitData.append(key, value);
     });
     
@@ -146,17 +166,15 @@ export default function AddLaptopForm() {
   };
 
   const formFields = [
-    ['Name', 'name'],
-    ['Category', 'category'],
-    ['Product Type', 'productType'],
+    ['Name*', 'name', 'text', true],
     ['Product Code', 'productCode'],
-    ['Referral Code', 'referralCode'],
+    ['Referral Code*', 'referralCode', 'text', true],
     ['Brand', 'brand'],
-    ['Price', 'price', 'number'],
+    ['Price*', 'price', 'number', true],
     ['Description', 'description', 'textarea'],
     ['Color', 'color'],
     ['Warranty', 'warranty'],
-    ['Quantity', 'quantity', 'number'],
+    ['Quantity*', 'quantity', 'number', true],
     ['Processor', 'processor'],
     ['RAM', 'ram'],
     ['Hard Disk', 'hardDisk'],
@@ -174,7 +192,7 @@ export default function AddLaptopForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Laptop</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {formFields.map(([label, name, type = 'text']) => (
+        {formFields.map(([label, name, type = 'text', isRequired = false]) => (
           <div key={name} className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">{label}</label>
             {type === 'textarea' ? (
@@ -184,6 +202,7 @@ export default function AddLaptopForm() {
                 onChange={handleInputChange}
                 className="mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                 rows="3"
+                placeholder="N/A"
               />
             ) : (
               <input 
@@ -192,6 +211,7 @@ export default function AddLaptopForm() {
                 value={formData[name]}
                 onChange={handleInputChange}
                 className="mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                placeholder="N/A"
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}

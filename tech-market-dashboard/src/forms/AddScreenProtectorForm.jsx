@@ -8,10 +8,18 @@ export default function AddScreenProtectorForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Structure the data with user-provided category and productType
+    // Set default values for optional fields
     const finalData = {
       ...data,
-      discount: data.discount || 0, // Only default for discount
+      discount: data.discount || 0,
+      category: data.category || 'Accessories',
+      productType: data.productType || 'ScreenProtector',
+      productCode: data.productCode || 'N/A',
+      brand: data.brand || 'N/A',
+      compatibleWith: data.compatibleWith || 'N/A',
+      color: data.color || 'N/A',
+      material: data.material || 'N/A',
+      description: data.description || 'N/A'
     };
     
     // Append all form data
@@ -68,18 +76,18 @@ export default function AddScreenProtectorForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Screen Protector</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Category', 'category', 'text', true],
-          ['Product Type', 'productType', 'text', true],
-          ['Name', 'name', 'text', true],
-          ['Product Code', 'productCode', 'text', true],
-          ['Referral Code', 'referralCode', 'text', false],
-          ['Brand', 'brand', 'text', true],
-          ['Compatible With', 'compatibleWith', 'text', true],
+          ['Category', 'category', 'text', false],
+          ['Product Type', 'productType', 'text', false],
+          ['Name*', 'name', 'text', true],
+          ['Product Code', 'productCode', 'text', false],
+          ['Referral Code*', 'referralCode', 'text', true],
+          ['Brand', 'brand', 'text', false],
+          ['Compatible With', 'compatibleWith', 'text', false],
           ['Color', 'color', 'text', false],
-          ['Material', 'material', 'text', true],
-          ['Description', 'description', 'textarea', true],
-          ['Price', 'price', 'number', true],
-          ['Quantity', 'quantity', 'number', true],
+          ['Material', 'material', 'text', false],
+          ['Description', 'description', 'textarea', false],
+          ['Price*', 'price', 'number', true],
+          ['Quantity*', 'quantity', 'number', true],
           ['Discount', 'discount', 'number', false],
         ].map(([label, name, type = 'text', isRequired]) => (
           <div key={name} className="flex flex-col">
@@ -91,6 +99,7 @@ export default function AddScreenProtectorForm() {
               <textarea 
                 {...register(name, { required: isRequired })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!isRequired ? "N/A" : ""}
               />
             ) : (
               <input 
@@ -100,6 +109,7 @@ export default function AddScreenProtectorForm() {
                   valueAsNumber: type === 'number'
                 })}
                 className="mt-1 p-2 border rounded-md" 
+                placeholder={!isRequired ? "N/A" : ""}
               />
             )}
             {errors[name] && <span className="text-sm text-red-500 mt-1">This field is required</span>}
@@ -112,13 +122,12 @@ export default function AddScreenProtectorForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Main Image <span className="text-red-500">*</span>
+              Main Image
             </label>
             <input 
               type="file" 
               name="image"
               onChange={handleImageChange} 
-              required
               className="block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer" 
             />
           </div>

@@ -14,16 +14,16 @@ export default function AddChargerForm() {
       name: data.name,
       category: 'Accessories',
       productType: 'Charger',
-      productCode: data.productCode,
+      productCode: data.productCode || 'N/A',
       referralCode: data.referralCode,
       price: data.price,
-      description: data.description,
+      description: data.description || 'N/A',
       quantity: data.quantity,
-      brand: data.brand,
-      input: data.input,
-      power: data.power,
-      color: data.color,
-      chargerType: data.chargerType,
+      brand: data.brand || 'N/A',
+      input: data.input || 'N/A',
+      power: data.power || 'N/A',
+      color: data.color || 'N/A',
+      chargerType: data.chargerType || 'N/A',
       discount: data.discount || 0
     };
 
@@ -98,17 +98,17 @@ export default function AddChargerForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Charger</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name', 'text', true, "Anker 45W USB-C Fast Charger"],
-          ['Product Code', 'productCode', 'text', true, "ANK-45W-USBC"],
-          ['Referral Code', 'referralCode', 'text', false, "REF-ANK-CHGR"],
-          ['Brand', 'brand', 'text', true, "Anker"],
-          ['Charger Type', 'chargerType', 'text', true, "USB-C Power Delivery"],
-          ['Input', 'input', 'text', true, "100-240V~50/60Hz 1.2A"],
-          ['Power (W)', 'power', 'text', true, "45W"],
-          ['Color', 'color', 'text', true, "White"],
-          ['Description', 'description', 'textarea', true, "Anker 45W USB-C wall charger with Power Delivery 3.0 for fast charging smartphones and tablets."],
-          ['Price', 'price', 'number', true, "29.99"],
-          ['Quantity', 'quantity', 'number', true, "80"],
+          ['Name*', 'name', 'text', true, "Anker 45W USB-C Fast Charger"],
+          ['Product Code', 'productCode', 'text', false, "ANK-45W-USBC"],
+          ['Referral Code*', 'referralCode', 'text', true, "REF-ANK-CHGR"],
+          ['Brand', 'brand', 'text', false, "Anker"],
+          ['Charger Type', 'chargerType', 'text', false, "USB-C Power Delivery"],
+          ['Input', 'input', 'text', false, "100-240V~50/60Hz 1.2A"],
+          ['Power (W)', 'power', 'text', false, "45W"],
+          ['Color', 'color', 'text', false, "White"],
+          ['Description', 'description', 'textarea', false, "Anker 45W USB-C wall charger with Power Delivery 3.0 for fast charging smartphones and tablets."],
+          ['Price*', 'price', 'number', true, "29.99"],
+          ['Quantity*', 'quantity', 'number', true, "80"],
           ['Discount', 'discount', 'number', false, "0"],
         ].map(([label, name, type = 'text', isRequired, defaultValue]) => (
           <div key={name} className="flex flex-col">

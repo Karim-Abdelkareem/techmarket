@@ -8,13 +8,18 @@ export default function AddCaseCoverForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     
-    // Set default discount to 0 if not provided
+    // Set default values for optional fields
     const finalData = {
       ...data,
       discount: data.discount || 0,
       productType: 'CaseCover', 
       category: 'Accessories',
-      price: data.price.toString().replace(/,/g, '') 
+      price: data.price.toString().replace(/,/g, ''),
+      brand: data.brand || 'N/A',
+      material: data.material || 'N/A',
+      compatibleWith: data.compatibleWith || 'N/A',
+      color: data.color || 'N/A',
+      description: data.description || 'N/A'
     };
     
   
@@ -79,16 +84,16 @@ export default function AddCaseCoverForm() {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Case/Cover</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ['Name', 'name', { required: true }, 'text'],
-          ['Product Code', 'productCode', { required: true }, 'text'],
-          ['Referral Code', 'referralCode', {}, 'text'],
-          ['Brand', 'brand', { required: true }, 'text'],
-          ['Material', 'material', { required: true }, 'text'],
-          ['Compatible With', 'compatibleWith', { required: true }, 'text'],
-          ['Color', 'color', { required: true }, 'text'],
-          ['Description', 'description', { required: true }, 'textarea'],
-          ['Price', 'price', { required: true, pattern: /^[0-9,]+$/ }, 'text'],
-          ['Quantity', 'quantity', { required: true, valueAsNumber: true }, 'number'],
+          ['Name*', 'name', { required: true }, 'text'],
+          ['Product Code', 'productCode', {}, 'text'],
+          ['Referral Code*', 'referralCode', { required: true }, 'text'],
+          ['Brand', 'brand', {}, 'text'],
+          ['Material', 'material', {}, 'text'],
+          ['Compatible With', 'compatibleWith', {}, 'text'],
+          ['Color', 'color', {}, 'text'],
+          ['Description', 'description', {}, 'textarea'],
+          ['Price*', 'price', { required: true, pattern: /^[0-9,]+$/ }, 'text'],
+          ['Quantity*', 'quantity', { required: true, valueAsNumber: true }, 'number'],
           ['Discount', 'discount', { valueAsNumber: true }, 'number'],
         ].map(([label, name, validation, type]) => (
           <div key={name} className="flex flex-col">
