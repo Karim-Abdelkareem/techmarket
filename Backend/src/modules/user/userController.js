@@ -11,7 +11,7 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
   }
   let logo;
   if (req.file) {
-    logo = req.files.path;
+    logo = req.file.path;
   }
 
   const newUser = await User.create({

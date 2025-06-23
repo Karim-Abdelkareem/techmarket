@@ -10,16 +10,23 @@ import AddChargerForm from '../../forms/AddChargerForm';
 import AddPowerBankForm from '../../forms/AddPowerBankForm';
 import AddCaseCoverForm from '../../forms/AddCaseCoverForm';
 import AddScreenProtectorForm from '../../forms/AddScreenProtectorForm';
-import AddAudioForm from '../../forms/AddAudioForm';
 import AddOverEarForm from '../../forms/AddOverEarForm';
 import AddInEarForm from '../../forms/AddInEarForm';
 import AddWirelessForm from '../../forms/AddWirelessForm';
 import AddWearableForm from '../../forms/AddWearableForm';
 import UpdateLaptopForm from '../../forms/UpdateLaptopForm';
 import UpdateMobileForm from '../../forms/UpdateMobileForm';
+import UpdateAccessoryForm from '../../forms/UpdateAccessoryForm';
 import UpdateCableForm from '../../forms/UpdateCableForm';
-import UpdateAudioForm from '../../forms/UpdateAudioForm';
+import UpdateChargerForm from '../../forms/UpdateChargerForm';
+import UpdatePowerBankForm from '../../forms/UpdatePowerBankForm';
+import UpdateCaseCoverForm from '../../forms/UpdateCaseCoverForm';
+import UpdateScreenProtectorForm from '../../forms/UpdateScreenProtectorForm';
 import UpdateWearableForm from '../../forms/UpdateWearableForm';
+import UpdateOverEarForm from '../../forms/UpdateOverEarForm';
+import UpdateInEarForm from '../../forms/UpdateInEarForm';
+import UpdateWirelessForm from '../../forms/UpdateWirelessForm';
+import UpdateAudioForm from '../../forms/UpdateAudioForm';
 import Modal from '../Modal';
 
 const CategoryPage = () => {
@@ -35,7 +42,7 @@ const CategoryPage = () => {
 
     const buildQueryParams = (main, sub) => {
         const params = new URLSearchParams();
-        
+
         switch (main) {
             case 'mobile-tablets':
                 params.append('productType', 'MobileTablet');
@@ -72,7 +79,7 @@ const CategoryPage = () => {
                 params.append('productType', 'Laptop');
                 break;
         }
-        
+
         return params.toString();
     };
 
@@ -90,16 +97,60 @@ const CategoryPage = () => {
                         setIsUpdateModalOpen(false);
                         setSelectedProduct(null);
                     }} />;
+                case 'Accessory':
+                    return <UpdateAccessoryForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
                 case 'Cable':
                     return <UpdateCableForm product={selectedProduct} onClose={() => {
                         setIsUpdateModalOpen(false);
                         setSelectedProduct(null);
                     }} />;
-                case 'Audio':
-                    return <UpdateAudioForm product={selectedProduct} onClose={() => {
+                case 'Charger':
+                    return <UpdateChargerForm product={selectedProduct} onClose={() => {
                         setIsUpdateModalOpen(false);
                         setSelectedProduct(null);
                     }} />;
+                case 'PowerBank':
+                    return <UpdatePowerBankForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'CaseCover':
+                    return <UpdateCaseCoverForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'ScreenProtector':
+                    return <UpdateScreenProtectorForm product={selectedProduct} onClose={() => {
+                        setIsUpdateModalOpen(false);
+                        setSelectedProduct(null);
+                    }} />;
+                case 'Audio':
+                    // Check the audioType to determine which specific audio update form to render
+                    switch (selectedProduct.audioType) {
+                        case 'OverEar':
+                            return <UpdateOverEarForm product={selectedProduct} onClose={() => {
+                                setIsUpdateModalOpen(false);
+                                setSelectedProduct(null);
+                            }} />;
+                        case 'InEar':
+                            return <UpdateInEarForm product={selectedProduct} onClose={() => {
+                                setIsUpdateModalOpen(false);
+                                setSelectedProduct(null);
+                            }} />;
+                        case 'Wireless':
+                            return <UpdateWirelessForm product={selectedProduct} onClose={() => {
+                                setIsUpdateModalOpen(false);
+                                setSelectedProduct(null);
+                            }} />;
+                        default:
+                            return <UpdateAudioForm product={selectedProduct} onClose={() => {
+                                setIsUpdateModalOpen(false);
+                                setSelectedProduct(null);
+                            }} />;
+                    }
                 case 'Wearable':
                     return <UpdateWearableForm product={selectedProduct} onClose={() => {
                         setIsUpdateModalOpen(false);
@@ -110,7 +161,7 @@ const CategoryPage = () => {
                     return <p>No update form available for this product type.</p>;
             }
         }
-        
+
         // Otherwise, render the add form based on the category
         switch (main) {
             case 'laptops':
@@ -168,39 +219,39 @@ const CategoryPage = () => {
             setSelectedProduct(null);
         }
     };
-    
-  const handleDeleteProduct = async (productId) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) {
-        return;
-    }
-    
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://127.0.0.1:3000/api/product/${productId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: token,
-            }
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (response.status === 404) {
-                throw new Error('Product not found');
-            }
-            throw new Error(errorData.message || 'Failed to delete product');
+
+    const handleDeleteProduct = async (productId) => {
+        if (!window.confirm('Are you sure you want to delete this product?')) {
+            return;
         }
-        
-        // Remove the deleted product from the state
-        setProducts(products.filter(product => product._id !== productId));
-        
-        // No need to parse response body for 204 status
-        alert('Product deleted successfully');
-    } catch (error) {
-        console.error('Error deleting product:', error);
-        alert(`Error: ${error.message}`);
-    }
-};
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://127.0.0.1:3000/api/product/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: token,
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (response.status === 404) {
+                    throw new Error('Product not found');
+                }
+                throw new Error(errorData.message || 'Failed to delete product');
+            }
+
+            // Remove the deleted product from the state
+            setProducts(products.filter(product => product._id !== productId));
+
+            // No need to parse response body for 204 status
+            alert('Product deleted successfully');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert(`Error: ${error.message}`);
+        }
+    };
     const config = categoryConfig[main];
     const subConfig = sub && config?.children ? config.children[sub] : config;
     const pageTitle = location.state?.title || (subConfig?.title || config?.title);
@@ -209,19 +260,19 @@ const CategoryPage = () => {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                
+
                 // Build query parameters for API call
                 const queryParams = buildQueryParams(main, sub);
                 const apiUrl = `http://127.0.0.1:3000/api/product${queryParams ? `?${queryParams}` : ''}`;
-                
+
                 console.log('Fetching from:', apiUrl); // For debugging
-                
+
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
                 const result = await response.json();
-                
+
                 // No need for client-side filtering anymore - API handles it
                 setProducts(result.data || []);
                 setLoading(false);
@@ -264,19 +315,19 @@ const CategoryPage = () => {
                 <p>Main category: {main}</p>
                 {sub && <p>Subcategory: {sub}</p>}
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {products.map(product => (
                     <div key={product._id} className="border rounded-lg p-4 shadow-sm relative">
                         <div className="absolute top-2 right-2 flex space-x-2">
-                            <button 
+                            <button
                                 onClick={() => handleUpdateProductClick(product)}
                                 className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700 transition"
                                 title="Update Product"
                             >
                                 <FaEdit size={14} />
                             </button>
-                            <button 
+                            <button
                                 onClick={() => handleDeleteProduct(product._id)}
                                 className="bg-red-500 text-white p-2 rounded-full hover:bg-red-700 transition"
                                 title="Delete Product"
@@ -284,8 +335,8 @@ const CategoryPage = () => {
                                 <FaTrash size={14} />
                             </button>
                         </div>
-                        <img 
-                            src={product.image || 'https://via.placeholder.com/300'} 
+                        <img
+                            src={product.image || 'https://via.placeholder.com/300'}
                             alt={product.name}
                             className="w-full h-48 object-cover rounded-md mb-2"
                         />
@@ -302,7 +353,7 @@ const CategoryPage = () => {
                     </div>
                 ))}
             </div>
-            
+
             {products.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                     No products found in this category.
