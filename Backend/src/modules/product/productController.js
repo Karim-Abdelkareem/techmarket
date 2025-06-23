@@ -173,7 +173,7 @@ export const updateProduct = expressAsyncHandler(async (req, res, next) => {
 //DELETE PRODUCT
 
 export const deleteProduct = expressAsyncHandler(async (req, res, next) => {
-  const { id } = req.params.id;
+  const id = req.params.id;  // Fixed: directly use req.params.id
   const product = await Product.findByIdAndDelete(id);
   if (!product) {
     return next(new AppError(`Product not found`, 404));
