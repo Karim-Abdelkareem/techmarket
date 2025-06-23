@@ -72,15 +72,30 @@ export const createProudct = expressAsyncHandler(async (req, res, next) => {
 
 //Get ALL THE PRODUCTS
 export const getProducts = expressAsyncHandler(async (req, res, next) => {
-  let features = new Features(Product.find(), req.query)
+  // If user is a moderator, only show their products
+  let baseQuery = {};
+  
+  if (req.user && req.user.role === 'moderator') {
+    baseQuery.dealer = req.user._id;
+  }
+  
+  let features = new Features(Product.find(baseQuery), req.query)
     .pagination()
     .filter()
     .sort()
     .search()
     .fields();
 
-  let results = await features.mongooseQuery;
-  const totalCount = await Product.countDocuments();
+  // Add populate to include dealer information
+  let mongooseQuery = features.mongooseQuery.populate({
+    path: 'dealer',
+    select: 'name email role'
+  });
+
+  let results = await mongooseQuery;
+  
+  // Count documents with the same filter for accurate pagination
+  const totalCount = await Product.countDocuments(baseQuery);
   const totalPages = Math.ceil(totalCount / features.limit);
   const hasNextPage = features.page < totalPages;
 
@@ -118,6 +133,11 @@ export const updateProduct = expressAsyncHandler(async (req, res, next) => {
   const baseProduct = await Product.findById(id);
   if (!baseProduct) {
     return next(new AppError("Product not found", 404));
+  }
+  
+  // Check if moderator is trying to update someone else's product
+  if (req.user.role === 'moderator' && baseProduct.dealer.toString() !== req.user._id.toString()) {
+    return next(new AppError("You are not authorized to update this product", 403));
   }
 
   if (category && productType) {
@@ -173,11 +193,22 @@ export const updateProduct = expressAsyncHandler(async (req, res, next) => {
 //DELETE PRODUCT
 
 export const deleteProduct = expressAsyncHandler(async (req, res, next) => {
-  const id = req.params.id;  // Fixed: directly use req.params.id
-  const product = await Product.findByIdAndDelete(id);
+  const id = req.params.id;
+  
+  // First find the product to check ownership
+  const product = await Product.findById(id);
   if (!product) {
     return next(new AppError(`Product not found`, 404));
   }
+  
+  // Check if moderator is trying to delete someone else's product
+  if (req.user.role === 'moderator' && product.dealer.toString() !== req.user._id.toString()) {
+    return next(new AppError("You are not authorized to delete this product", 403));
+  }
+  
+  // Now delete the product
+  await Product.findByIdAndDelete(id);
+  
   res.status(204).json({
     status: "success",
     message: "Product deleted successfully",

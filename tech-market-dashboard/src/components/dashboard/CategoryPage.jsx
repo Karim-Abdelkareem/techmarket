@@ -1,7 +1,8 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { categoryConfig } from "../../config/categoryConfig";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit, FaUser, FaShieldAlt } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 import AddLaptopForm from '../../forms/AddLaptopForm';
 import AddMobileForm from '../../forms/AddMobileForm';
 import AddAccessoryForm from '../../forms/AddAccessoryForm';
@@ -255,6 +256,7 @@ const CategoryPage = () => {
     const config = categoryConfig[main];
     const subConfig = sub && config?.children ? config.children[sub] : config;
     const pageTitle = location.state?.title || (subConfig?.title || config?.title);
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -267,7 +269,13 @@ const CategoryPage = () => {
 
                 console.log('Fetching from:', apiUrl); // For debugging
 
-                const response = await fetch(apiUrl);
+                const token = localStorage.getItem('token');
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        Authorization: token
+                    }
+                });
+                
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
@@ -350,6 +358,25 @@ const CategoryPage = () => {
                         )}
                         <p className="text-sm text-gray-500 mt-1">Type: {product.productType}</p>
                         <p className="text-sm text-gray-500">Quantity: {product.quantity}</p>
+                        {currentUser?.role === 'admin' && product.dealer && (
+                            <div className="mt-2 pt-2 border-t border-gray-200">
+                                <p className="text-sm flex items-center">
+                                    <span className="mr-1">
+                                        {product.dealer.role === 'moderator' ? 
+                                            <FaShieldAlt className="text-purple-500" /> : 
+                                            <FaUser className="text-blue-500" />}
+                                    </span>
+                                    <span className="font-medium">
+                                        {product.dealer.name || product.dealer.email}
+                                    </span>
+                                </p>
+                                {product.dealer.role && (
+                                    <p className="text-xs text-gray-500">
+                                        {product.dealer.role.charAt(0).toUpperCase() + product.dealer.role.slice(1)}
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
