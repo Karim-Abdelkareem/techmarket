@@ -1,34 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import Categories from './components/Categories'
+import FeaturedProducts from './components/FeaturedProducts'
+import AllProducts from './components/AllProducts'
+import Brands from './components/Brands'
+import Testimonials from './components/Testimonials'
+import Footer from './components/Footer'
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    // Function to handle scroll animations
+    const handleScrollAnimation = () => {
+      const elements = document.querySelectorAll('.animate-on-scroll');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('animate-fadeIn');
+        }
+      });
+    };
+
+    // Add event listener for scroll
+    window.addEventListener('scroll', handleScrollAnimation);
+    // Run once on initial load
+    handleScrollAnimation();
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScrollAnimation);
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="bg-dark">
+      <Navbar className="animate-slideInDown" />
+      <main>
+        <Hero className="animate-fadeIn" />
+        <Categories className="animate-on-scroll" />
+        <FeaturedProducts className="animate-on-scroll" />
+        <AllProducts className="animate-on-scroll" />
+        <Brands className="animate-on-scroll" />
+        <Testimonials className="animate-on-scroll" />
+      </main>
+      <Footer className="animate-on-scroll" />
+    </div>
   )
 }
 

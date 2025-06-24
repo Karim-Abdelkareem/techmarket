@@ -1,68 +1,740 @@
+@import "tailwindcss";
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --primary: #001D3D;
+  --primary-light: #003566;
+  --primary-dark: #000814;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --secondary: #10B981;
+  --secondary-light: #6EE7B7;
+  --secondary-dark: #065F46;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Accent Colors */
+  --accent: #FFC300;
+  --accent-light: #FFD60A;
+  --accent-dark: #FFAA00;
+
+  /* Dark Colors */
+  --dark: #000814;
+  --dark-light: #374151;
+  --dark-darker: #111827;
+
+  /* Light Colors */
+  --light: #F9FAFB;
+  --light-dark: #F3F4F6;
+  --light-darker: #E5E7EB;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* Font Family Base Styles */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Font Family Utilities */
+.font-sans {
+  font-family: 'Inter', sans-serif;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.font-heading {
+  font-family: 'Poppins', sans-serif;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Primary Color Utilities */
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-primary-light {
+  background-color: var(--primary-light);
+}
+
+.bg-primary-dark {
+  background-color: var(--primary-dark);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-primary-light {
+  color: var(--primary-light);
+}
+
+.text-primary-dark {
+  color: var(--primary-dark);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.border-primary-light {
+  border-color: var(--primary-light);
+}
+
+.border-primary-dark {
+  border-color: var(--primary-dark);
+}
+
+/* Secondary Color Utilities */
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-secondary-light {
+  background-color: var(--secondary-light);
+}
+
+.bg-secondary-dark {
+  background-color: var(--secondary-dark);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-secondary-light {
+  color: var(--secondary-light);
+}
+
+.text-secondary-dark {
+  color: var(--secondary-dark);
+}
+
+.border-secondary {
+  border-color: var(--secondary);
+}
+
+.border-secondary-light {
+  border-color: var(--secondary-light);
+}
+
+.border-secondary-dark {
+  border-color: var(--secondary-dark);
+}
+
+/* Accent Color Utilities */
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-light {
+  background-color: var(--accent-light);
+}
+
+.bg-accent-dark {
+  background-color: var(--accent-dark);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-accent-light {
+  color: var(--accent-light);
+}
+
+.text-accent-dark {
+  color: var(--accent-dark);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.border-accent-light {
+  border-color: var(--accent-light);
+}
+
+.border-accent-dark {
+  border-color: var(--accent-dark);
+}
+
+/* Dark Color Utilities */
+.bg-dark {
+  background-color: var(--dark);
+}
+
+.bg-dark-light {
+  background-color: var(--dark-light);
+}
+
+.bg-dark-darker {
+  background-color: var(--dark-darker);
+}
+
+.text-dark {
+  color: var(--dark);
+}
+
+.text-dark-light {
+  color: var(--dark-light);
+}
+
+.text-dark-darker {
+  color: var(--dark-darker);
+}
+
+.border-dark {
+  border-color: var(--dark);
+}
+
+.border-dark-light {
+  border-color: var(--dark-light);
+}
+
+.border-dark-darker {
+  border-color: var(--dark-darker);
+}
+
+/* Light Color Utilities */
+.bg-light {
+  background-color: var(--light);
+}
+
+.bg-light-dark {
+  background-color: var(--light-dark);
+}
+
+.bg-light-darker {
+  background-color: var(--light-darker);
+}
+
+.text-light {
+  color: var(--light);
+}
+
+.text-light-dark {
+  color: var(--light-dark);
+}
+
+.text-light-darker {
+  color: var(--light-darker);
+}
+
+.border-light {
+  border-color: var(--light);
+}
+
+.border-light-dark {
+  border-color: var(--light-dark);
+}
+
+.border-light-darker {
+  border-color: var(--light-darker);
+}
+
+/* Hover States */
+.hover\:bg-primary:hover {
+  background-color: var(--primary);
+}
+
+.hover\:bg-primary-light:hover {
+  background-color: var(--primary-light);
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: var(--primary-dark);
+}
+
+.hover\:bg-secondary:hover {
+  background-color: var(--secondary);
+}
+
+.hover\:bg-secondary-light:hover {
+  background-color: var(--secondary-light);
+}
+
+.hover\:bg-secondary-dark:hover {
+  background-color: var(--secondary-dark);
+}
+
+.hover\:bg-accent:hover {
+  background-color: var(--accent);
+}
+
+.hover\:bg-accent-light:hover {
+  background-color: var(--accent-light);
+}
+
+.hover\:bg-accent-dark:hover {
+  background-color: var(--accent-dark);
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary);
+}
+
+.hover\:text-secondary:hover {
+  color: var(--secondary);
+}
+
+.hover\:text-accent:hover {
+  color: var(--accent);
+}
+
+/* Focus States */
+.focus\:bg-primary:focus {
+  background-color: var(--primary);
+}
+
+.focus\:bg-secondary:focus {
+  background-color: var(--secondary);
+}
+
+.focus\:bg-accent:focus {
+  background-color: var(--accent);
+}
+
+.focus\:text-primary:focus {
+  color: var(--primary);
+}
+
+.focus\:text-secondary:focus {
+  color: var(--secondary);
+}
+
+.focus\:text-accent:focus {
+  color: var(--accent);
+}
+
+/* Ring Colors for Focus States */
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--primary);
+}
+
+.focus\:ring-secondary:focus {
+  --tw-ring-color: var(--secondary);
+}
+
+.focus\:ring-accent:focus {
+  --tw-ring-color: var(--accent);
+}
+
+/* Animation Utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  a:hover {
-    color: #747bff;
+
+  to {
+    opacity: 1;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
   }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.8s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+.animate-spin {
+  animation: spin 2s linear infinite;
+}
+
+/* Animation delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Animation durations */
+.duration-300 {
+  animation-duration: 300ms;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+.duration-700 {
+  animation-duration: 700ms;
+}
+
+.duration-1000 {
+  animation-duration: 1000ms;
+}
+
+/* Infinite animation */
+.infinite {
+  animation-iteration-count: infinite;
+}
+
+/* Slide animation for auto-scrolling */
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-slide {
+  animation: slide 20s linear infinite;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-primary-light {
+  color: var(--primary-light);
+}
+
+.text-primary-dark {
+  color: var(--primary-dark);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.border-primary-light {
+  border-color: var(--primary-light);
+}
+
+.border-primary-dark {
+  border-color: var(--primary-dark);
+}
+
+/* Secondary Color Utilities */
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-secondary-light {
+  background-color: var(--secondary-light);
+}
+
+.bg-secondary-dark {
+  background-color: var(--secondary-dark);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-secondary-light {
+  color: var(--secondary-light);
+}
+
+.text-secondary-dark {
+  color: var(--secondary-dark);
+}
+
+.border-secondary {
+  border-color: var(--secondary);
+}
+
+.border-secondary-light {
+  border-color: var(--secondary-light);
+}
+
+.border-secondary-dark {
+  border-color: var(--secondary-dark);
+}
+
+/* Accent Color Utilities */
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-light {
+  background-color: var(--accent-light);
+}
+
+.bg-accent-dark {
+  background-color: var(--accent-dark);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-accent-light {
+  color: var(--accent-light);
+}
+
+.text-accent-dark {
+  color: var(--accent-dark);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.border-accent-light {
+  border-color: var(--accent-light);
+}
+
+.border-accent-dark {
+  border-color: var(--accent-dark);
+}
+
+/* Dark Color Utilities */
+.bg-dark {
+  background-color: var(--dark);
+}
+
+.bg-dark-light {
+  background-color: var(--dark-light);
+}
+
+.bg-dark-darker {
+  background-color: var(--dark-darker);
+}
+
+.text-dark {
+  color: var(--dark);
+}
+
+.text-dark-light {
+  color: var(--dark-light);
+}
+
+.text-dark-darker {
+  color: var(--dark-darker);
+}
+
+.border-dark {
+  border-color: var(--dark);
+}
+
+.border-dark-light {
+  border-color: var(--dark-light);
+}
+
+.border-dark-darker {
+  border-color: var(--dark-darker);
+}
+
+/* Light Color Utilities */
+.bg-light {
+  background-color: var(--light);
+}
+
+.bg-light-dark {
+  background-color: var(--light-dark);
+}
+
+.bg-light-darker {
+  background-color: var(--light-darker);
+}
+
+.text-light {
+  color: var(--light);
+}
+
+.text-light-dark {
+  color: var(--light-dark);
+}
+
+.text-light-darker {
+  color: var(--light-darker);
+}
+
+.border-light {
+  border-color: var(--light);
+}
+
+.border-light-dark {
+  border-color: var(--light-dark);
+}
+
+.border-light-darker {
+  border-color: var(--light-darker);
+}
+
+/* Hover States */
+.hover\:bg-primary:hover {
+  background-color: var(--primary);
+}
+
+.hover\:bg-primary-light:hover {
+  background-color: var(--primary-light);
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: var(--primary-dark);
+}
+
+.hover\:bg-secondary:hover {
+  background-color: var(--secondary);
+}
+
+.hover\:bg-secondary-light:hover {
+  background-color: var(--secondary-light);
+}
+
+.hover\:bg-secondary-dark:hover {
+  background-color: var(--secondary-dark);
+}
+
+.hover\:bg-accent:hover {
+  background-color: var(--accent);
+}
+
+.hover\:bg-accent-light:hover {
+  background-color: var(--accent-light);
+}
+
+.hover\:bg-accent-dark:hover {
+  background-color: var(--accent-dark);
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary);
+}
+
+.hover\:text-secondary:hover {
+  color: var(--secondary);
+}
+
+.hover\:text-accent:hover {
+  color: var(--accent);
+}
+
+/* Focus States */
+.focus\:bg-primary:focus {
+  background-color: var(--primary);
+}
+
+.focus\:bg-secondary:focus {
+  background-color: var(--secondary);
+}
+
+.focus\:bg-accent:focus {
+  background-color: var(--accent);
+}
+
+.focus\:text-primary:focus {
+  color: var(--primary);
+}
+
+.focus\:text-secondary:focus {
+  color: var(--secondary);
+}
+
+.focus\:text-accent:focus {
+  color: var(--accent);
+}
+
+/* Ring Colors for Focus States */
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--primary);
+}
+
+.focus\:ring-secondary:focus {
+  --tw-ring-color: var(--secondary);
+}
+
+.focus\:ring-accent:focus {
+  --tw-ring-color: var(--accent);
 }
