@@ -12,6 +12,15 @@ import DashboardLayout from './layouts/DashboardLayout';
 import AdminLayout from './layouts/AdminLayout';
 import CategoryPage from './components/dashboard/CategoryPage';
 
+// Analytics Components
+import Analytics from './components/analytics/Analytics';
+import Overview from './components/analytics/Overview';
+import ProductStats from './components/analytics/ProductStats';
+import UserStats from './components/analytics/UserStats';
+import MostViewedProducts from './components/analytics/MostViewedProducts';
+import MostBoughtProducts from './components/analytics/MostBoughtProducts';
+import TopExclusiveProducts from './components/analytics/TopExclusiveProducts';
+
 // Admin Components
 import ModeratorList from './components/admin/ModeratorList';
 import CompanyList from './components/admin/CompanyList';
@@ -56,6 +65,13 @@ function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="category/:main" element={<CategoryPage />} />
                 <Route path="category/:main/:sub" element={<CategoryPage />} />
+                <Route path="analytics" element={<Analytics />} />
+                <Route path="analytics/overview" element={<Overview />} />
+                <Route path="analytics/products" element={<ProductStats />} />
+                <Route path="analytics/users" element={<UserStats />} />
+                <Route path="analytics/most-viewed" element={<MostViewedProducts />} />
+                <Route path="analytics/most-bought" element={<MostBoughtProducts />} />
+                <Route path="analytics/top-exclusive" element={<TopExclusiveProducts />} />
               </Route>
               <Route 
                 path="/admin" 

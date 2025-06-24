@@ -1,5 +1,18 @@
 export const sidebarItems = [
     {
+        title: "Analytics",
+        icon: "📊",
+        children: [
+            { title: "Dashboard", icon: "📈", path: "/dashboard/analytics" },
+            { title: "Overview", icon: "🔍", path: "/dashboard/analytics/overview" },
+            { title: "Product Stats", icon: "📦", path: "/dashboard/analytics/products" },
+            { title: "User Stats", icon: "👥", path: "/dashboard/analytics/users" },
+            { title: "Most Viewed", icon: "👁️", path: "/dashboard/analytics/most-viewed" },
+            { title: "Most Purchased", icon: "🛒", path: "/dashboard/analytics/most-bought" },
+            { title: "Top Exclusive", icon: "⭐", path: "/dashboard/analytics/top-exclusive" },
+        ],
+    },
+    {
         title: "Mobile & Tablets",
         icon: "📱",
         path: "/dashboard/category/mobile-tablets",
