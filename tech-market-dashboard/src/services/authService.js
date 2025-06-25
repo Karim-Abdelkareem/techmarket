@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Create an axios instance with base URL
-const API_URL = "http://localhost:3000/api/auth";
+const API_URL = "https://techmarket-lovat.vercel.app/api/auth";
 
 // Create axios instance with default config
 const api = axios.create({

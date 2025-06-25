@@ -18,7 +18,7 @@ const ModeratorList = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3000/api/user', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/user', {
         headers: {
           Authorization: token,
         },
@@ -53,7 +53,7 @@ const ModeratorList = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/user/${id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/user/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: token,

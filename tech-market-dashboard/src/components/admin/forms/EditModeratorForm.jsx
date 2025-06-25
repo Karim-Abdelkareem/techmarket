@@ -48,7 +48,7 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch(`http://localhost:3000/api/user/${moderator._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/user/${moderator._id}`, {
         method: 'PATCH',
         headers: {
           Authorization: token,

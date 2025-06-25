@@ -44,7 +44,7 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch('http://localhost:3000/api/user', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/user', {
         method: 'POST',
         headers: {
           Authorization: token,

@@ -5,7 +5,6 @@ import { FaTrash, FaEdit, FaUser, FaShieldAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import AddLaptopForm from '../../forms/AddLaptopForm';
 import AddMobileForm from '../../forms/AddMobileForm';
-import AddAccessoryForm from '../../forms/AddAccessoryForm';
 import AddCableForm from '../../forms/AddCableForm';
 import AddChargerForm from '../../forms/AddChargerForm';
 import AddPowerBankForm from '../../forms/AddPowerBankForm';
@@ -196,7 +195,7 @@ const CategoryPage = () => {
                     case 'screen-protector':
                         return <AddScreenProtectorForm />;
                     default:
-                        return <AddAccessoryForm />;
+                        return <AddCableForm />;
                 }
             default:
                 return <p>No form available for this category.</p>;
@@ -228,7 +227,7 @@ const CategoryPage = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://127.0.0.1:3000/api/product/${productId}`, {
+            const response = await fetch(`https://techmarket-lovat.vercel.app/api/product/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: token,
@@ -265,7 +264,7 @@ const CategoryPage = () => {
 
                 // Build query parameters for API call
                 const queryParams = buildQueryParams(main, sub);
-                const apiUrl = `http://127.0.0.1:3000/api/product${queryParams ? `?${queryParams}` : ''}`;
+                const apiUrl = `https://techmarket-lovat.vercel.app/api/product${queryParams ? `?${queryParams}` : ''}`;
 
                 console.log('Fetching from:', apiUrl); // For debugging
 

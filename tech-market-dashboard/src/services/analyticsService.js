@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Create an axios instance with base URL
-const API_URL = "http://localhost:3000/api/analytics";
+const API_URL = "https://techmarket-lovat.vercel.app/api/analytics";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -31,7 +31,9 @@ export const analyticsService = {
       const response = await api.get("/overview");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch overview data" };
+      throw (
+        error.response?.data || { message: "Failed to fetch overview data" }
+      );
     }
   },
 
@@ -41,7 +43,11 @@ export const analyticsService = {
       const response = await api.get("/products");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch product statistics" };
+      throw (
+        error.response?.data || {
+          message: "Failed to fetch product statistics",
+        }
+      );
     }
   },
 
@@ -51,7 +57,9 @@ export const analyticsService = {
       const response = await api.get("/users");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch user statistics" };
+      throw (
+        error.response?.data || { message: "Failed to fetch user statistics" }
+      );
     }
   },
 
@@ -61,7 +69,11 @@ export const analyticsService = {
       const response = await api.get("/most-viewed");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch most viewed products" };
+      throw (
+        error.response?.data || {
+          message: "Failed to fetch most viewed products",
+        }
+      );
     }
   },
 
@@ -71,7 +83,11 @@ export const analyticsService = {
       const response = await api.get("/most-bought");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch most bought products" };
+      throw (
+        error.response?.data || {
+          message: "Failed to fetch most bought products",
+        }
+      );
     }
   },
 
@@ -81,7 +97,11 @@ export const analyticsService = {
       const response = await api.get("/top-exclusive");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch top exclusive products" };
+      throw (
+        error.response?.data || {
+          message: "Failed to fetch top exclusive products",
+        }
+      );
     }
   },
 
@@ -91,7 +111,11 @@ export const analyticsService = {
       const response = await api.get("/dashboard");
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Failed to fetch dashboard analytics" };
+      throw (
+        error.response?.data || {
+          message: "Failed to fetch dashboard analytics",
+        }
+      );
     }
   },
 };
