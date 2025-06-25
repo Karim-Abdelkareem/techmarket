@@ -70,7 +70,7 @@ export const authService = {
       if (!token) throw new Error("No authentication token");
 
       const response = await axios.get(
-        "http://localhost:3000/api/v1/users/profile",
+        "https://techmarket-lovat.vercel.app/api/v1/users/profile",
         {
           headers: { Authorization: token },
         }
