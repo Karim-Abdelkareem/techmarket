@@ -2,6 +2,7 @@ import User from "../user/userModel.js";
 import Product from "../product/productModel.js";
 // import Order from '../order/orderModel.js'; // Uncomment if you have an Order model
 import { AppError } from "../../utils/appError.js";
+import Reservation from "../reservation/reservationModel.js";
 
 // Overview: total users, products, (sales if available)
 export const getOverview = async (req, res, next) => {
@@ -174,6 +175,63 @@ export const getDashboardAnalytics = async (req, res, next) => {
       { $limit: 12 },
     ]);
 
+    // Total products per seller, including items sold
+    const totalProductsPerSeller = await Product.aggregate([
+      {
+        $group: {
+          _id: "$dealer",
+          totalProducts: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "dealerInfo",
+        },
+      },
+      { $unwind: "$dealerInfo" },
+      // Lookup confirmed reservations for this seller's products
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "dealer",
+          as: "sellerProducts",
+        },
+      },
+      { $unwind: "$sellerProducts" },
+      {
+        $lookup: {
+          from: "reservations",
+          let: { productId: "$sellerProducts._id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$product", "$$productId"] },
+                    { $eq: ["$status", "confirmed"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "confirmedReservations",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          sellerName: { $first: "$dealerInfo.name" },
+          totalProducts: { $first: "$totalProducts" },
+          itemsSold: { $sum: { $size: "$confirmedReservations" } },
+        },
+      },
+      { $sort: { totalProducts: -1 } },
+    ]);
+
     // (Optional) Sales stats if you have an Order model
     // const totalSales = await Order.aggregate([{ $group: { _id: null, total: { $sum: "$total" }}}]);
 
@@ -189,11 +247,46 @@ export const getDashboardAnalytics = async (req, res, next) => {
         avgPriceByCategory,
         topDiscountedProducts,
         userSignupTrends,
+        totalProductsPerSeller,
         // totalSales: totalSales[0]?.total || 0,
       },
     });
   } catch (error) {
     console.error("Dashboard analytics error:", error);
     next(new AppError("Error fetching dashboard analytics", 500));
+  }
+};
+
+// Standalone endpoint for total products per seller
+export const getTotalProductsPerSeller = async (req, res, next) => {
+  try {
+    const result = await Product.aggregate([
+      {
+        $group: {
+          _id: "$dealer",
+          totalProducts: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "dealerInfo",
+        },
+      },
+      { $unwind: "$dealerInfo" },
+      {
+        $project: {
+          sellerId: "$dealerInfo._id",
+          sellerName: "$dealerInfo.name",
+          totalProducts: 1,
+        },
+      },
+      { $sort: { totalProducts: -1 } },
+    ]);
+    res.status(200).json({ status: "success", data: result });
+  } catch (err) {
+    next(new AppError(err.message, 500));
   }
 };
