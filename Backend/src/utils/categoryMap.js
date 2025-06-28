@@ -11,4 +11,5 @@ export const CATEGORY_MAP = {
   Laptop: ["Laptop"],
   Audio: ["Audio"],
   Wearables: ["Wearable"],
+  Gaming: ["Gaming"],
 };

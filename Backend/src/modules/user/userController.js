@@ -4,7 +4,15 @@ import { AppError } from "../../utils/appError.js";
 import { Features } from "../../utils/features.js";
 
 export const createModerator = expressAsyncHandler(async (req, res, next) => {
-  const { email, password, name, brief, locationText, locationLink } = req.body;
+  const {
+    email,
+    password,
+    name,
+    phoneNumber,
+    brief,
+    locationText,
+    locationLink,
+  } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     return next(new AppError("Email already exists", 400));
@@ -18,6 +26,7 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
     email,
     password,
     name,
+    phoneNumber,
     logo,
     brief,
     location: {

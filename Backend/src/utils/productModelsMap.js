@@ -7,6 +7,7 @@ import { ScreenProtector } from "../modules/models/ScreenProtectorModel.js";
 import { Audio } from "../modules/models/AudioModel.js";
 import { Wearable } from "../modules/models/WearableSchema.js";
 import { Laptop } from "../modules/models/LaptopModel.js";
+import { Gaming } from "../modules/models/GamingModel.js";
 
 export const PRODUCT_MODELS = {
   MobileTablet: MobileTabletModel,
@@ -18,4 +19,10 @@ export const PRODUCT_MODELS = {
   Audio,
   Wearable,
   Laptop,
+  Gaming,
+  Games: Gaming,
+  Accounts: Gaming,
+  PlayStation: Gaming,
+  Controller: Gaming,
+  Skin: Gaming,
 };

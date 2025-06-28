@@ -4,7 +4,7 @@ import User from "../user/userModel.js";
 import { AppError } from "../../utils/appError.js";
 
 export const register = expressAsyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, phoneNumber, password, role } = req.body;
   const userExists = await User.findOne({ email });
   if (userExists) {
     return next(new AppError("User already exists", 400));
@@ -21,6 +21,7 @@ export const register = expressAsyncHandler(async (req, res, next) => {
     name,
     profilePicture: req.body.profilePicture,
     email,
+    phoneNumber,
     password,
     role,
   });
@@ -49,6 +50,7 @@ export const login = expressAsyncHandler(async (req, res, next) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      phoneNumber: user.phoneNumber,
       profilePicture: user.profilePicture || undefined,
       breif: user.breif || undefined,
       logo: user.logo || undefined,
