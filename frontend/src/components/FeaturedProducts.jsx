@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { getProducts } from '../services/api';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const FeaturedProducts = ({ className }) => {
   const productsRef = useRef(null);
@@ -10,12 +11,34 @@ const FeaturedProducts = ({ className }) => {
   // Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
+      const token = localStorage.getItem("token")
       try {
         setLoading(true);
-        // Get featured products (limit to 4, sort by views)
-        const response = await getProducts({ limit: 4, sort: '-views' });
-        if (response && response.data) {
-          setProducts(response.data);
+        // Get random products (using the same approach as AllProducts)
+        const response = await axios.get('http://127.0.0.1:3000/api/product', {
+          headers: {
+            Authorization: token
+          },
+        });
+        
+        // Get 4 random products from the response
+        if (response.data.data && response.data.data.length > 0) {
+          const allProducts = response.data.data;
+          const randomProducts = [];
+          
+          // Get 4 random products or all if less than 4
+          const numProducts = Math.min(4, allProducts.length);
+          const usedIndices = new Set();
+          
+          while (randomProducts.length < numProducts) {
+            const randomIndex = Math.floor(Math.random() * allProducts.length);
+            if (!usedIndices.has(randomIndex)) {
+              usedIndices.add(randomIndex);
+              randomProducts.push(allProducts[randomIndex]);
+            }
+          }
+          
+          setProducts(randomProducts);
         } else {
           // Fallback to default products if API doesn't return expected format
           setProducts(defaultProducts);
@@ -210,22 +233,26 @@ const FeaturedProducts = ({ className }) => {
                 className="product-card bg-gray-800 rounded-lg overflow-hidden opacity-0 transition-all duration-500 hover:shadow-xl"
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="relative overflow-hidden">
-                  <img 
-                    src={productImage} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                  {badge && (
-                    <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      {badge}
-                    </span>
-                  )}
-                </div>
+                <Link to={`/product/${product._id}`} className="block">
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={productImage} 
+                      alt={product.name} 
+                      className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                    {badge && (
+                      <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                        {badge}
+                      </span>
+                    )}
+                  </div>
+                </Link>
                 
                 <div className="p-5">
                   <div className="text-gray-400 text-sm mb-1">{brandName}</div>
-                  <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
+                  <Link to={`/product/${product._id}`} className="block">
+                    <h3 className="text-white font-semibold text-lg mb-2 hover:text-blue-500 transition-colors">{product.name}</h3>
+                  </Link>
                   
                   <div className="flex items-center mb-3">
                     <div className="flex text-yellow-400 mr-2">
@@ -248,9 +275,11 @@ const FeaturedProducts = ({ className }) => {
                 </div>
                 
                 <div className="px-5 pb-5">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:scale-105">
-                    Add to Cart
-                  </button>
+                  <Link to={`/product/${product._id}`} className="block w-full">
+                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:scale-105">
+                      View Details
+                    </button>
+                  </Link>
                 </div>
               </div>
             );

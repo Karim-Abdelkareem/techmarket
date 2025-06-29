@@ -72,12 +72,8 @@ export const createProudct = expressAsyncHandler(async (req, res, next) => {
 
 //Get ALL THE PRODUCTS
 export const getProducts = expressAsyncHandler(async (req, res, next) => {
-  // If user is a moderator, only show their products
+  // Public access - no authentication required for viewing products
   let baseQuery = {};
-  
-  if (req.user && req.user.role === 'moderator') {
-    baseQuery.dealer = req.user._id;
-  }
   
   let features = new Features(Product.find(baseQuery), req.query)
     .pagination()

@@ -1,35 +1,14 @@
 import { useRef, useEffect, useState } from 'react';
-import { getCategories } from '../services/api';
 
 const Categories = ({ className }) => {
   const categoriesRef = useRef(null);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch categories from backend
+  // Use default categories directly instead of fetching from API
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await getCategories();
-        if (response && response.data && response.data.categories) {
-          setCategories(response.data.categories);
-        } else {
-          // Fallback to default categories if API doesn't return expected format
-          setCategories(defaultCategories);
-        }
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        setError('Failed to load categories');
-        // Use default categories as fallback
-        setCategories(defaultCategories);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
+    setCategories(defaultCategories);
   }, []);
 
   // Animation for category cards
@@ -85,6 +64,11 @@ const Categories = ({ className }) => {
       name: 'Headphones',
       icon: 'headphones',
     },
+    {
+      _id: 5,
+      name: 'Wearables',
+      icon: 'smartwatch',
+    },
   ];
 
   // Get icon based on category name or icon property
@@ -133,25 +117,13 @@ const Categories = ({ className }) => {
     }
   };
 
-  // Generate gradient colors for each category
-  const getGradientStyle = (index) => {
-    const gradients = [
-      'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',  // Blue-purple
-      'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',  // Green-blue
-      'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',  // Yellow-red
-      'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',  // Purple-pink
-    ];
-    
-    return {
-      background: gradients[index % gradients.length],
-    };
-  };
+
 
   if (loading) {
     return (
       <div className={`py-16 px-6 bg-dark ${className || ''}`}>
         <h2 className="text-3xl font-bold text-white text-center mb-12 animate-fadeIn">Shop by Category</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
           {[1, 2, 3, 4].map((_, index) => (
             <div key={index} className="bg-gray-800 rounded-lg p-8 animate-pulse h-40"></div>
           ))}
@@ -167,16 +139,15 @@ const Categories = ({ className }) => {
   return (
     <div className={`py-16 px-6 bg-dark ${className || ''}`} ref={categoriesRef}>
       <h2 className="text-3xl font-bold text-white text-center mb-12 animate-fadeIn">Shop by Category</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
         {categories.map((category, index) => {
           const categoryName = category.name || 'Category';
           return (
             <a
               key={category._id || index}
               href={`#${categoryName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-              className={`category-card rounded-lg p-8 flex flex-col items-center justify-center transition-all duration-300 opacity-0 hover:scale-105 shadow-lg`}
+              className={`category-card rounded-lg p-8 flex flex-col items-center  justify-center transition-all duration-300 opacity-0 hover:scale-95 shadow-lg bg-gradient-to-br from-[#0B0D0F] via-[#10172a] to-[#031E49] text-white`}
               style={{
-                ...getGradientStyle(index),
                 transitionDelay: `${index * 100}ms`,
               }}
             >

@@ -8,6 +8,12 @@ export const createMobile = expressAsyncHandler(async (req, res, next) => {
   const files = req.files;
   req.body.image = files?.image?.[0]?.path || null;
   req.body.images = files?.images?.map((file) => file.path) || [];
+  
+  // Set dealer from authenticated user
+  if (req.user) {
+    req.body.dealer = req.user.id;
+  }
+  
   const data = await Mobiles.create(req.body);
   res.status(201).json({
     status: "success",
