@@ -9,7 +9,15 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Mobile", "Tablet", "Laptop", "Accessories", "Wearables", "Audio"],
+      enum: [
+        "Mobile",
+        "Tablet",
+        "Laptop",
+        "Accessories",
+        "Wearables",
+        "Audio",
+        "Gaming",
+      ],
       required: true,
     },
     dealer: {

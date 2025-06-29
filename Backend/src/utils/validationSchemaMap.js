@@ -9,6 +9,7 @@ import {
   powerBankSchema,
   screenProtectorSchema,
   wearableSchema,
+  gamingSchema,
 } from "../modules/models/validationSchemas.js";
 
 export const PRODUCT_TYPE_SCHEMAS = {
@@ -21,4 +22,10 @@ export const PRODUCT_TYPE_SCHEMAS = {
   PowerBank: powerBankSchema,
   ScreenProtector: screenProtectorSchema,
   Wearable: wearableSchema,
+  Gaming: gamingSchema,
+  Games: gamingSchema,
+  Accounts: gamingSchema,
+  PlayStation: gamingSchema,
+  Controller: gamingSchema,
+  Skin: gamingSchema,
 };

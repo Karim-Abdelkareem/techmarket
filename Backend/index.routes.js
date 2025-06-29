@@ -8,6 +8,7 @@ import productRouter from "./src/modules/product/proudctRouter.js";
 import cartRouter from "./src/modules/cart/cartRouter.js";
 import userRouter from "./src/modules/user/userRouter.js";
 import analyticsRouter from "./src/modules/analytics/analyticsRouter.js";
+import reservationRouter from "./src/modules/reservation/reservationRouter.js";
 // import categoryRouter from "./src/modules/category/categoryRouter.js";
 // import mobilesRouter from "./src/modules/mobiles/mobilesRouter.js";
 // import accessoryRouter from "./src/modules/accessories/accessoryRouter.js";
@@ -27,6 +28,7 @@ export const init = (app) => {
   app.use("/api/inquiry", inquiryRouter);
   app.use("/api/cart", cartRouter);
   app.use("/api/user", userRouter);
+  app.use("/api/reservation", reservationRouter);
   app.use("/api/analytics", analyticsRouter);
   // app.use("/api/category", categoryRouter);
   // app.use("/api/mobiles", mobilesRouter);

@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/dlz30daw5/image/upload/v1750140703/cd4bd9b0ea2807611ba3a67c331bff0b_nloio1.jpg",
     },
+    phoneNumber: {
+      type: String,
+    },
     email: {
       type: String,
       required: true,

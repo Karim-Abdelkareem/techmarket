@@ -16,4 +16,10 @@ router.get("/most-bought", analyticsController.getMostBoughtProducts);
 router.get("/top-exclusive", analyticsController.getTopExclusiveProducts);
 router.get("/dashboard", analyticsController.getDashboardAnalytics);
 
+// Add route for total products per seller
+router.get(
+  "/total-products-per-seller",
+  analyticsController.getTotalProductsPerSeller
+);
+
 export default router;
