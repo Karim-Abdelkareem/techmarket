@@ -4,7 +4,15 @@ export const baseProductSchema = Joi.object({
   name: Joi.string().required(),
   slug: Joi.string(),
   category: Joi.string()
-    .valid("Mobile", "Tablet", "Laptop", "Accessories", "Wearables", "Audio")
+    .valid(
+      "Mobile",
+      "Tablet",
+      "Laptop",
+      "Accessories",
+      "Wearables",
+      "Audio",
+      "Gaming"
+    )
     .required(),
   productType: Joi.string().required(),
   brand: Joi.string(),
@@ -129,5 +137,27 @@ export const wearableSchema = baseProductSchema.concat(
     features: Joi.array().items(Joi.string()),
     battery: Joi.string(),
     warranty: Joi.string(),
+  })
+);
+
+export const gamingSchema = baseProductSchema.concat(
+  Joi.object({
+    subType: Joi.string()
+      .valid("Games", "Accounts", "PlayStation", "Controller", "Skin")
+      .required(),
+
+    // Only required for Accounts
+    type: Joi.string().valid("Primary", "Secondary").when("subType", {
+      is: "Accounts",
+      then: Joi.required(),
+      otherwise: Joi.forbidden(),
+    }),
+
+    // Only required for PlayStation
+    warranty: Joi.string().when("subType", {
+      is: "PlayStation",
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
   })
 );

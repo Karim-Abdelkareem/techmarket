@@ -300,7 +300,7 @@ const SearchPage = () => {
                 type="text"
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                placeholder="Search for products, brands, or categories..."
+                placeholder="Search for products..."
                 className="w-full px-6 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               />
               <button className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md transition-colors">
@@ -308,18 +308,6 @@ const SearchPage = () => {
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
               </button>
-            </div>
-            {filters.search && (
-              <div className="mt-3 text-center">
-                <span className="text-blue-400 text-sm">
-                  Searching for: <strong>"{filters.search}"</strong> in all products
-                </span>
-              </div>
-            )}
-            <div className="mt-4 text-center">
-              <p className="text-gray-400 text-sm">
-                Search across <strong>products</strong>, <strong>brands</strong>, <strong>categories</strong>, and <strong>descriptions</strong>
-              </p>
             </div>
           </div>
 
@@ -368,58 +356,6 @@ const SearchPage = () => {
             </Link>
           </div>
         </div>
-
-        {/* Search Criteria Display */}
-        {(filters.search || filters.category || filters.brand || filters.priceMin || filters.priceMax) && (
-          <div className="mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-300 font-medium">Search Criteria:</span>
-                <div className="flex flex-wrap gap-2">
-                  {filters.search && (
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                      </svg>
-                      "{filters.search}"
-                    </span>
-                  )}
-                  {filters.category && (
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm flex items-center">
-                      <span className="mr-1">{categories.find(c => c.id === filters.category)?.icon}</span>
-                      {categories.find(c => c.id === filters.category)?.name}
-                    </span>
-                  )}
-                  {filters.brand && (
-                    <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm flex items-center">
-                      <span className="mr-1">{popularBrands.find(b => b.id === filters.brand)?.icon}</span>
-                      {popularBrands.find(b => b.id === filters.brand)?.name}
-                    </span>
-                  )}
-                  {(filters.priceMin || filters.priceMax) && (
-                    <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-sm">
-                      ${filters.priceMin || 0} - ${filters.priceMax || '∞'}
-                    </span>
-                  )}
-                  {filters.sort && filters.sort !== 'newest' && (
-                    <span className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm">
-                      Sorted by: {filters.sort.replace('-', ' ')}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <button 
-                onClick={clearFilters}
-                className="text-red-400 hover:text-red-300 text-sm font-medium flex items-center"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-                Clear All
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Shop by Brand Section (similar to 2B) */}
         {filters.category === 'Mobile' && (

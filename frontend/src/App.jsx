@@ -9,7 +9,9 @@ import SignupPage from './pages/SignupPage'
 import ProductDetailsPage from './pages/ProductDetailsPage'
 import SearchPage from './pages/SearchPage'
 import CartPage from './pages/CartPage'
+import ProductsPage from './pages/ProductsPage'
 import OffersPage from './pages/OffersPage'
+import UserAccountPage from './pages/UserAccountPage'
 
 function App() {
   useEffect(() => {
@@ -39,7 +41,9 @@ function App() {
   }, []);
 
   const isAuthenticated = () => {
-    return localStorage.getItem('token') !== null;
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    return token !== null && user !== null;
   };
 
   const PrivateRoute = ({ children }) => {
@@ -71,9 +75,25 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route 
+            path="/user-account" 
+            element={
+              <PrivateRoute>
+                <UserAccountPage />
+              </PrivateRoute>
+            } 
+          />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route 
+            path="/cart" 
+            element={
+              <PrivateRoute>
+                <CartPage />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/products/:category" element={<ProductsPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route
             path="/"

@@ -6,8 +6,22 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(0);
   const [cartLoading, setCartLoading] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+
+  useEffect(() => {
+    // Safely get user from localStorage
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      setUser(null);
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -65,13 +79,13 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="hidden md:flex space-x-6">
-          <Link to="/search?category=Mobile" className="text-white hover:text-gray-300 transition-colors">Mobile Phones</Link>
-          <Link to="/search?category=Tablet" className="text-white hover:text-gray-300 transition-colors">Tablets</Link>
-          <Link to="/search?category=Laptop" className="text-white hover:text-gray-300 transition-colors">Laptops</Link>
-          <Link to="/search?category=Wearables" className="text-white hover:text-gray-300 transition-colors">Smartwatches</Link>
-          <Link to="/search?category=Audio" className="text-white hover:text-gray-300 transition-colors">Headphones</Link>
-          <Link to="/offers" className="text-white hover:text-gray-300 transition-colors">Offers</Link>
-          <Link to="/search" className="text-white hover:text-gray-300 transition-colors">All Products</Link>
+          <Link to="/products/Laptop" className="text-white hover:text-gray-300 transition-colors">Laptops</Link>
+          <Link to="/products/Mobile" className="text-white hover:text-gray-300 transition-colors">Mobile Phones</Link>
+          <Link to="/products/Tablet" className="text-white hover:text-gray-300 transition-colors">Tablets</Link>
+          <Link to="/products/Wearable" className="text-white hover:text-gray-300 transition-colors">Wearables</Link>
+          <Link to="/products/Audio" className="text-white hover:text-gray-300 transition-colors">Audio</Link>
+          <Link to="/products/Accessory" className="text-white hover:text-gray-300 transition-colors">Accessories</Link>
+          <Link to="/offers" className="text-red-400 hover:text-red-300 transition-colors font-semibold">Offers</Link>
         </div>
       </div>
       <div className="flex items-center space-x-4">
@@ -89,11 +103,13 @@ const Navbar = () => {
             </svg>
           </button>
         </form>
-        <button className="text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-        </button>
+        {user && (
+          <button className="text-white" onClick={() => navigate('/user-account')}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </button>
+        )}
         {user ? (
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
