@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 const Hero = () => {
@@ -17,15 +17,17 @@ const Hero = () => {
     return () => animation;
   }, []);
   
-  const gradientStyle = {
-    background: `linear-gradient(135deg, 
+  const gradientStyle = useMemo(() => ({
+    backgroundImage: `linear-gradient(135deg, 
       rgba(30, 41, 59, 1) 0%, 
       rgba(17, 24, 39, 1) 25%, 
       rgba(79, 70, 229, 0.3) ${gradientPosition}%, 
       rgba(17, 24, 39, 1) ${gradientPosition + 20}%, 
       rgba(30, 41, 59, 1) 100%)`,
     backgroundSize: '200% 200%',
-  };
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  }), [gradientPosition]);
   
   return (
     <div className="py-20 px-6 text-center relative overflow-hidden" style={gradientStyle}>

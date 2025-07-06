@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { FaEdit, FaTrash, FaPlus, FaUserShield } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+import { FaEdit, FaTrash, FaPlus, FaUserShield, FaUsers, FaUserCog, FaUser } from 'react-icons/fa';
 import Modal from '../Modal';
-import AddModeratorForm from './forms/AddModeratorForm';
-import EditModeratorForm from './forms/EditModeratorForm';
+import AddUserForm from './forms/AddModeratorForm';
+import EditUserForm from './forms/EditModeratorForm';
 
 const ModeratorList = () => {
   const [users, setUsers] = useState([]);
@@ -14,6 +15,22 @@ const ModeratorList = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const { token } = useAuth();
+  const location = useLocation();
+
+  // Determine active tab based on URL path
+  const getActiveTabFromPath = () => {
+    const path = location.pathname;
+    if (path.includes('/admins')) return 'admin';
+    if (path.includes('/users')) return 'user';
+    return 'moderator'; // default
+  };
+
+  const [activeTab, setActiveTab] = useState(getActiveTabFromPath());
+
+  // Update active tab when URL changes
+  useEffect(() => {
+    setActiveTab(getActiveTabFromPath());
+  }, [location.pathname]);
 
   const fetchUsers = async () => {
     try {
@@ -41,6 +58,20 @@ const ModeratorList = () => {
     fetchUsers();
   }, [token]);
 
+  // Filter users based on active tab
+  const filteredUsers = users.filter(user => {
+    switch (activeTab) {
+      case 'moderator':
+        return user.role === 'moderator';
+      case 'admin':
+        return user.role === 'admin';
+      case 'user':
+        return user.role === 'user';
+      default:
+        return true;
+    }
+  });
+
   const handleEdit = (user) => {
     setCurrentUser(user);
     setShowEditModal(true);
@@ -61,7 +92,7 @@ const ModeratorList = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete moderator');
+        throw new Error('Failed to delete user');
       }
 
       // Remove the deleted user from the state
@@ -84,6 +115,12 @@ const ModeratorList = () => {
     setShowEditModal(false);
     setCurrentUser(null);
   };
+
+  const tabs = [
+    { id: 'moderator', label: 'Moderators', icon: <FaUserShield />, count: users.filter(u => u.role === 'moderator').length },
+    { id: 'admin', label: 'Admins', icon: <FaUserCog />, count: users.filter(u => u.role === 'admin').length },
+    { id: 'user', label: 'Users', icon: <FaUser />, count: users.filter(u => u.role === 'user').length },
+  ];
 
   if (loading) {
     return (
@@ -110,18 +147,49 @@ const ModeratorList = () => {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="flex justify-between items-center p-6 border-b border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-800">Users & Moderators</h2>
+        <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
         <button
           onClick={() => setShowAddModal(true)}
           className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700 transition-colors"
         >
-          <FaPlus /> Add Moderator
+          <FaPlus /> Add User
         </button>
       </div>
 
-      {users.length === 0 ? (
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <div className="flex space-x-1 px-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`
+                flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg border-b-2 transition-colors
+                ${activeTab === tab.id
+                  ? 'border-red-600 text-red-600 bg-red-50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              {tab.icon}
+              {tab.label}
+              <span className={`
+                px-2 py-0.5 text-xs rounded-full
+                ${activeTab === tab.id
+                  ? 'bg-red-100 text-red-600'
+                  : 'bg-gray-100 text-gray-600'
+                }
+              `}>
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filteredUsers.length === 0 ? (
         <div className="p-6 text-center text-gray-500">
-          <p>No users found.</p>
+          <p>No {activeTab}s found.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -137,7 +205,7 @@ const ModeratorList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -194,20 +262,18 @@ const ModeratorList = () => {
         </div>
       )}
 
-      {/* Add Moderator Modal */}
+      {/* Add User Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
-        <AddModeratorForm onSuccess={handleAddSuccess} onCancel={() => setShowAddModal(false)} />
+        <AddUserForm onSuccess={handleAddSuccess} onCancel={() => setShowAddModal(false)} />
       </Modal>
 
-      {/* Edit Moderator Modal */}
+      {/* Edit User Modal */}
       <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)}>
-        {currentUser && (
-          <EditModeratorForm 
-            moderator={currentUser} 
-            onSuccess={handleEditSuccess} 
-            onCancel={() => setShowEditModal(false)} 
-          />
-        )}
+        <EditUserForm 
+          user={currentUser} 
+          onSuccess={handleEditSuccess} 
+          onCancel={() => setShowEditModal(false)} 
+        />
       </Modal>
     </div>
   );

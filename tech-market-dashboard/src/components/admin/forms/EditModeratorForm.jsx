@@ -2,24 +2,25 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../context/AuthContext';
 
-const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
+const EditUserForm = ({ user, onSuccess, onCancel }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(moderator.logo || null);
+  const [logoPreview, setLogoPreview] = useState(user?.logo || null);
   const { token } = useAuth();
 
   useEffect(() => {
-    // Pre-fill the form with moderator data
+    // Pre-fill the form with user data
     reset({
-      name: moderator.name,
-      email: moderator.email,
-      brief: moderator.brief || '',
-      locationText: moderator.location?.text || '',
-      locationLink: moderator.location?.link || '',
+      name: user?.name || '',
+      email: user?.email || '',
+      role: user?.role || 'user',
+      brief: user?.brief || '',
+      locationText: user?.location?.text || '',
+      locationLink: user?.location?.link || '',
     });
-  }, [moderator, reset]);
+  }, [user, reset]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -37,6 +38,7 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
       const formData = new FormData();
       formData.append('name', data.name);
       formData.append('email', data.email);
+      formData.append('role', data.role); // Add role to form data
       if (data.password) {
         formData.append('password', data.password);
       }
@@ -48,7 +50,7 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch(`https://techmarket-lovat.vercel.app/api/user/${moderator._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/user/${user._id}`, {
         method: 'PATCH',
         headers: {
           Authorization: token,
@@ -58,7 +60,7 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update moderator');
+        throw new Error(errorData.message || 'Failed to update user');
       }
 
       const result = await response.json();
@@ -72,7 +74,7 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800">Edit Moderator</h2>
+      <h2 className="text-xl font-semibold text-gray-800">Edit User</h2>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4">
@@ -105,6 +107,19 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Role *</label>
+          <select
+            {...register('role', { required: 'Role is required' })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            <option value="user">User</option>
+            <option value="moderator">Moderator</option>
+            <option value="admin">Admin</option>
+          </select>
+          {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>}
         </div>
 
         <div>
@@ -179,11 +194,11 @@ const EditModeratorForm = ({ moderator, onSuccess, onCancel }) => {
           className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           disabled={loading}
         >
-          {loading ? 'Updating...' : 'Update Moderator'}
+          {loading ? 'Updating...' : 'Update User'}
         </button>
       </div>
     </form>
   );
 };
 
-export default EditModeratorForm;
+export default EditUserForm;

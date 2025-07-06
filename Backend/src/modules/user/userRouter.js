@@ -11,7 +11,7 @@ router
     protect,
     restrictTo("admin"),
     upload.single("logo"),
-    userController.createModerator
+    userController.createUser
   )
   .get(protect, restrictTo("admin"), userController.getAllUsers);
 

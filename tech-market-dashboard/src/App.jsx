@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 import AdminLayout from './layouts/AdminLayout';
 import CategoryPage from './components/dashboard/CategoryPage';
+import TradeinRequestsPage from './pages/TradeinRequestsPage';
+import ReservationRequestsPage from './pages/ReservationRequestsPage';
 
 // Analytics Components
 import Analytics from './components/analytics/Analytics';
@@ -72,6 +74,8 @@ function App() {
                 <Route path="analytics/most-viewed" element={<MostViewedProducts />} />
                 <Route path="analytics/most-bought" element={<MostBoughtProducts />} />
                 <Route path="analytics/top-exclusive" element={<TopExclusiveProducts />} />
+                <Route path="tradein/requests" element={<TradeinRequestsPage />} />
+                <Route path="reservations/requests" element={<ReservationRequestsPage />} />
               </Route>
               <Route 
                 path="/admin" 
@@ -83,6 +87,8 @@ function App() {
               >
                 <Route index element={<ModeratorList />} />
                 <Route path="moderators" element={<ModeratorList />} />
+                <Route path="admins" element={<ModeratorList />} />
+                <Route path="users" element={<ModeratorList />} />
                 <Route path="companies" element={<CompanyList />} />
               </Route>
             </Routes>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getCart, removeFromCart, updateCartItemQuantity, clearCart } from '../services/api';
+import { getCart, removeFromCart, updateCartItemQuantity, clearCart } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const CartPage = () => {

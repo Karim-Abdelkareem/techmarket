@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProductById, getProductsByCategory, addToCart } from '../services/api';
+import { getProductById, getProductsByCategory, addToCart } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const ProductDetailsPage = () => {

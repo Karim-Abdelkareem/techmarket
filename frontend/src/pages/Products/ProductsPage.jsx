@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { getProducts, getProductsByCategory } from '../services/api';
+import { getProducts, getProductsByCategory } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const ProductsPage = () => {

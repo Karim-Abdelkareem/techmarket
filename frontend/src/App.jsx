@@ -4,14 +4,17 @@ import { Toaster } from 'react-hot-toast'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
-import ProductDetailsPage from './pages/ProductDetailsPage'
-import SearchPage from './pages/SearchPage'
-import CartPage from './pages/CartPage'
-import ProductsPage from './pages/ProductsPage'
+import LoginPage from './pages/Auth/LoginPage'
+import SignupPage from './pages/Auth/SignupPage'
+import ProductDetailsPage from './pages/Products/ProductDetailsPage'
+import SearchPage from './pages/Search/SearchPage'
+import CartPage from './pages/Cart & Checkout/CartPage'
+import ProductsPage from './pages/Products/ProductsPage'
 import OffersPage from './pages/OffersPage'
-import UserAccountPage from './pages/UserAccountPage'
+import UserAccountPage from './pages/Profile/UserAccountPage'
+import UserChats from './pages/Profile/userChats'
+import TradeInPage from './pages/TradeIn/TradeInPage'
+import CategoryPage from './pages/Category/CategoryPage'
 
 function App() {
   useEffect(() => {
@@ -83,6 +86,22 @@ function App() {
               </PrivateRoute>
             } 
           />
+          <Route 
+            path="/user-chats" 
+            element={
+              <PrivateRoute>
+                <UserChats />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/trade-in" 
+            element={
+              <PrivateRoute>
+                <TradeInPage />
+              </PrivateRoute>
+            } 
+          />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route 
@@ -94,6 +113,7 @@ function App() {
             } 
           />
           <Route path="/products/:category" element={<ProductsPage />} />
+          <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route
             path="/"

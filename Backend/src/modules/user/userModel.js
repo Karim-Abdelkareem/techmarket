@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin", "moderator"],
       default: "user",
     },
-    breif: {
+    brief: {
       type: String,
     },
     logo: {
