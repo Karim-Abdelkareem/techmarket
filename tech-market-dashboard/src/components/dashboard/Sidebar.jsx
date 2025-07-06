@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaChevronDown, FaChevronRight, FaUsers, FaBuilding, FaSignOutAlt, FaUser, FaCog, FaBell } from "react-icons/fa";
+import { FaChevronDown, FaChevronRight, FaUsers, FaBuilding, FaSignOutAlt, FaUser, FaCog, FaBell, FaUserShield, FaUserCog } from "react-icons/fa";
 import { sidebarItems } from "../../data/sidebarItems";
 
 const adminItems = [
     {
         title: 'Moderators',
-        icon: <FaUsers />,
+        icon: <FaUserShield />,
         path: '/admin/moderators',
+    },
+    {
+        title: 'Admins',
+        icon: <FaUserCog />,
+        path: '/admin/admins',
+    },
+    {
+        title: 'Users',
+        icon: <FaUsers />,
+        path: '/admin/users',
     },
     {
         title: 'Companies',
@@ -18,7 +28,6 @@ const adminItems = [
 
 const Sidebar = ({ user, onLogout }) => {
     const [openTabs, setOpenTabs] = useState({});
-    const [showUserMenu, setShowUserMenu] = useState(false);
     const location = useLocation();
 
     const toggleTab = (title) =>
@@ -81,18 +90,6 @@ const Sidebar = ({ user, onLogout }) => {
                 </div>
             </div>
 
-            {/* Search Box */}
-            <div className="px-4 pt-4 pb-2">
-                <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <FaChevronRight className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                </div>
-            </div>
-
             {/* Admin Navigation */}
             <nav className="p-4 space-y-2 border-b border-gray-100">
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Admin</h3>
@@ -102,7 +99,7 @@ const Sidebar = ({ user, onLogout }) => {
                             className={`
                                 flex justify-between items-center px-4 py-3 rounded-lg cursor-pointer
                                 transition-all duration-200 ease-in-out group
-                                ${location.pathname === item.path
+                                ${location.pathname === item.path || (item.path === '/admin/moderators' && location.pathname === '/admin')
                                     ? "bg-red-600 text-white shadow-lg"
                                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 }

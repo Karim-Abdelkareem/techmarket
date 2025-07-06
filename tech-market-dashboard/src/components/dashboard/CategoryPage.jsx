@@ -5,7 +5,6 @@ import { FaTrash, FaEdit, FaUser, FaShieldAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import AddLaptopForm from '../../forms/AddLaptopForm';
 import AddMobileForm from '../../forms/AddMobileForm';
-import AddAccessoryForm from '../../forms/AddAccessoryForm';
 import AddCableForm from '../../forms/AddCableForm';
 import AddChargerForm from '../../forms/AddChargerForm';
 import AddPowerBankForm from '../../forms/AddPowerBankForm';
@@ -28,6 +27,8 @@ import UpdateOverEarForm from '../../forms/UpdateOverEarForm';
 import UpdateInEarForm from '../../forms/UpdateInEarForm';
 import UpdateWirelessForm from '../../forms/UpdateWirelessForm';
 import UpdateAudioForm from '../../forms/UpdateAudioForm';
+import AddGamingForm from '../../forms/AddGamingForm';
+import UpdateGamingForm from '../../forms/UpdateGamingForm';
 import Modal from '../Modal';
 
 const CategoryPage = () => {
@@ -37,7 +38,6 @@ const CategoryPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [modalType, setModalType] = useState('add'); // 'add' or 'update'
 
@@ -79,10 +79,60 @@ const CategoryPage = () => {
             case 'laptops':
                 params.append('productType', 'Laptop');
                 break;
+            case 'gaming':
+                params.append('category', 'gaming');
+                if (sub) {
+                    switch (sub) {
+                        case 'games':
+                            params.append('subType', 'Games');
+                            break;
+                        case 'accounts':
+                            params.append('subType', 'Accounts');
+                            break;
+                        case 'playstation':
+                            params.append('subType', 'PlayStation');
+                            break;
+                        case 'controller':
+                            params.append('subType', 'Controller');
+                            break;
+                        case 'skin':
+                            params.append('subType', 'Skin');
+                            break;
+                    }
+                }
+                break;
         }
 
         return params.toString();
     };
+
+    const fetchProducts = async () => {
+        try {
+            setLoading(true);
+            const queryParams = buildQueryParams(main, sub);
+            const apiUrl = `https://techmarket-lovat.vercel.app/api/product${queryParams ? `?${queryParams}` : ''}`;
+            const token = localStorage.getItem('token');
+            const response = await fetch(apiUrl, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch products');
+            }
+            const result = await response.json();
+            setProducts(result.data || []);
+            setLoading(false);
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            setError(err.message);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, [main, sub]);
 
     const renderForm = () => {
         // If we're updating a product, render the appropriate update form
@@ -90,72 +140,96 @@ const CategoryPage = () => {
             switch (selectedProduct.productType) {
                 case 'Laptop':
                     return <UpdateLaptopForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'MobileTablet':
                     return <UpdateMobileForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'Accessory':
                     return <UpdateAccessoryForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'Cable':
                     return <UpdateCableForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'Charger':
                     return <UpdateChargerForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'PowerBank':
                     return <UpdatePowerBankForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'CaseCover':
                     return <UpdateCaseCoverForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'ScreenProtector':
                     return <UpdateScreenProtectorForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 case 'Audio':
                     // Check the audioType to determine which specific audio update form to render
                     switch (selectedProduct.audioType) {
                         case 'OverEar':
                             return <UpdateOverEarForm product={selectedProduct} onClose={() => {
-                                setIsUpdateModalOpen(false);
+                                setIsModalOpen(false);
                                 setSelectedProduct(null);
+                                fetchProducts();
                             }} />;
                         case 'InEar':
                             return <UpdateInEarForm product={selectedProduct} onClose={() => {
-                                setIsUpdateModalOpen(false);
+                                setIsModalOpen(false);
                                 setSelectedProduct(null);
+                                fetchProducts();
                             }} />;
                         case 'Wireless':
                             return <UpdateWirelessForm product={selectedProduct} onClose={() => {
-                                setIsUpdateModalOpen(false);
+                                setIsModalOpen(false);
                                 setSelectedProduct(null);
+                                fetchProducts();
                             }} />;
                         default:
                             return <UpdateAudioForm product={selectedProduct} onClose={() => {
-                                setIsUpdateModalOpen(false);
+                                setIsModalOpen(false);
                                 setSelectedProduct(null);
+                                fetchProducts();
                             }} />;
                     }
                 case 'Wearable':
                     return <UpdateWearableForm product={selectedProduct} onClose={() => {
-                        setIsUpdateModalOpen(false);
+                        setIsModalOpen(false);
                         setSelectedProduct(null);
+                        fetchProducts();
+                    }} />;
+                case 'Gaming':
+                case 'Games':
+                case 'Accounts':
+                case 'PlayStation':
+                case 'Controller':
+                case 'Skin':
+                    return <UpdateGamingForm product={selectedProduct} onClose={() => {
+                        setIsModalOpen(false);
+                        setSelectedProduct(null);
+                        fetchProducts();
                     }} />;
                 // Add more update forms for other product types as needed
                 default:
@@ -196,8 +270,13 @@ const CategoryPage = () => {
                     case 'screen-protector':
                         return <AddScreenProtectorForm />;
                     default:
-                        return <AddAccessoryForm />;
+                        return <AddCableForm />;
                 }
+            case 'gaming':
+                return <AddGamingForm onClose={() => {
+                    setIsModalOpen(false);
+                    fetchProducts();
+                }} />;
             default:
                 return <p>No form available for this category.</p>;
         }
@@ -225,16 +304,14 @@ const CategoryPage = () => {
         if (!window.confirm('Are you sure you want to delete this product?')) {
             return;
         }
-
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://127.0.0.1:3000/api/product/${productId}`, {
+            const response = await fetch(`https://techmarket-lovat.vercel.app/api/product/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: token,
                 }
             });
-
             if (!response.ok) {
                 const errorData = await response.json();
                 if (response.status === 404) {
@@ -242,11 +319,10 @@ const CategoryPage = () => {
                 }
                 throw new Error(errorData.message || 'Failed to delete product');
             }
-
             // Remove the deleted product from the state
-            setProducts(products.filter(product => product._id !== productId));
-
-            // No need to parse response body for 204 status
+            // setProducts(products.filter(product => product._id !== productId));
+            // Instead, refresh the list
+            fetchProducts();
             alert('Product deleted successfully');
         } catch (error) {
             console.error('Error deleting product:', error);
@@ -257,42 +333,6 @@ const CategoryPage = () => {
     const subConfig = sub && config?.children ? config.children[sub] : config;
     const pageTitle = location.state?.title || (subConfig?.title || config?.title);
     const { currentUser } = useAuth();
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
-
-                // Build query parameters for API call
-                const queryParams = buildQueryParams(main, sub);
-                const apiUrl = `http://127.0.0.1:3000/api/product${queryParams ? `?${queryParams}` : ''}`;
-
-                console.log('Fetching from:', apiUrl); // For debugging
-
-                const token = localStorage.getItem('token');
-                const response = await fetch(apiUrl, {
-                    headers: {
-                        Authorization: token
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch products');
-                }
-                const result = await response.json();
-
-                // No need for client-side filtering anymore - API handles it
-                setProducts(result.data || []);
-                setLoading(false);
-            } catch (err) {
-                console.error('Error fetching products:', err);
-                setError(err.message);
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, [main, sub]);
 
     if (!config || (sub && !subConfig)) {
         return <h1 className="text-xl font-bold">404 - Category Not Found</h1>;

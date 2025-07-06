@@ -33,7 +33,7 @@ const AddCompanyForm = ({ onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch('http://localhost:3000/api/dealer', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/dealer', {
         method: 'POST',
         headers: {
           Authorization: token,

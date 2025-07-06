@@ -17,7 +17,7 @@ const DealerList = () => {
   const fetchDealers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3000/api/dealer', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/dealer', {
         headers: {
           Authorization: token,
         },
@@ -64,7 +64,7 @@ const DealerList = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/dealer/${deleteConfirmation._id}`,
+        `https://techmarket-lovat.vercel.app/api/dealer/${deleteConfirmation._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -147,7 +147,7 @@ const DealerList = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {dealer.logo ? (
                       <img
-                        src={`http://localhost:3000/${dealer.logo}`}
+                        src={`https://techmarket-lovat.vercel.app/${dealer.logo}`}
                         alt={dealer.name}
                         className="h-10 w-10 rounded-full object-cover"
                       />

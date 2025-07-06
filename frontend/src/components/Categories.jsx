@@ -1,94 +1,46 @@
-import { useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiTag, FiRefreshCw } from 'react-icons/fi';
 
-const Categories = ({ className }) => {
-  const categoriesRef = useRef(null);
+const CATEGORIES = [
+  { id: 'Mobile', name: 'Mobile Phones & Tablets', icon: '📱' },
+  { id: 'Laptop', name: 'Laptops', icon: '💻' },
+  { id: 'Accessories', name: 'Accessories', icon: '🔧' },
+  { id: 'Wearables', name: 'Wearables', icon: '⌚' },
+  { id: 'Audio', name: 'Audio', icon: '🎧' },
+  { id: 'Gaming', name: 'Gaming', icon: '🎮' },
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const categoryCards = entry.target.querySelectorAll('.category-card');
-            categoryCards.forEach((card, index) => {
-              setTimeout(() => {
-                card.classList.add('animate-slideIn');
-                card.style.opacity = 1;
-              }, index * 150);
-            });
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
+const Categories = () => {
+  const navigate = useNavigate();
 
-    if (categoriesRef.current) {
-      observer.observe(categoriesRef.current);
-    }
-
-    return () => {
-      if (categoriesRef.current) {
-        observer.unobserve(categoriesRef.current);
-      }
-    };
-  }, []);
-
-  const categories = [
-    {
-      id: 1,
-      name: 'Mobile & tablets',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-    {
-      id: 2,
-      name: 'Laptops',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-    {
-      id: 3,
-      name: 'Smartwatches',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-    },
-    {
-      id: 4,
-      name: 'Headphones',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
-      ),
-    },
-  ];
+  const handleCategoryClick = (cat) => {
+    navigate(`/category/${cat.id}`);
+  };
 
   return (
-    <div className={`py-16 px-6 bg-dark ${className || ''}`} ref={categoriesRef}>
-      <h2 className="text-3xl font-bold text-white text-center mb-12 animate-fadeIn">Shop by Category</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        {categories.map((category, index) => (
-          <a
-            key={category.id}
-            href={`#${category.name.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}
-            className={`category-card bg-gray-800 hover:bg-gray-700 rounded-lg p-8 flex flex-col items-center justify-center transition-all duration-300 opacity-0`}
-            style={{ transitionDelay: `${index * 100}ms` }}
-          >
-            <div className="text-white mb-4 hover:animate-pulse">{category.icon}</div>
-            <h3 className="text-white text-lg font-medium">{category.name}</h3>
-          </a>
-        ))}
+    <section className="py-16 bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-white mb-4">Shop by Category</h2>
+          <p className="text-gray-400 text-lg">Explore our wide range of tech products</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          {CATEGORIES.map((category) => (
+            <div
+              key={category.id}
+              className="bg-gray-800 rounded-lg p-6 text-center hover:bg-gray-700 transition-colors cursor-pointer transform hover:scale-105"
+              onClick={() => handleCategoryClick(category)}
+            >
+              <div className="text-4xl mb-4">{category.icon}</div>
+              <h3 className="text-white font-semibold text-sm">{category.name}</h3>
+            </div>
+          ))}
+        </div>
+
+       
       </div>
-    </div>
+    </section>
   );
 };
 

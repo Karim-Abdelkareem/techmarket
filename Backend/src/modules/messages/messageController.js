@@ -1,4 +1,5 @@
 import Message from "./messageModule.js";
+import User from "../user/userModel.js";
 import { AppError } from "../../utils/appError.js";
 import expressAsyncHandler from "express-async-handler";
 
@@ -64,5 +65,68 @@ export const deleteMessage = expressAsyncHandler(async (req, res, next) => {
   res.status(204).json({
     status: "success",
     message: null,
+  });
+});
+
+// Get all users (for admin/moderator messaging)
+export const getAllUsers = expressAsyncHandler(async (req, res, next) => {
+  const users = await User.find({ role: "user" })
+    .select("name email role")
+    .sort({ name: 1 });
+  
+  res.status(200).json({
+    status: "success",
+    data: users,
+  });
+});
+
+// Send message to user (admin/moderator)
+export const sendMessageToUser = expressAsyncHandler(async (req, res, next) => {
+  const { to, message } = req.body;
+  
+  // Verify the target user exists and is a regular user
+  const targetUser = await User.findById(to);
+  if (!targetUser) {
+    return next(new AppError("User not found", 404));
+  }
+  
+  if (targetUser.role !== "user") {
+    return next(new AppError("Can only send messages to regular users", 400));
+  }
+
+  const newMessage = await Message.create({
+    from: req.user._id,
+    to,
+    message,
+  });
+
+  const populatedMessage = await Message.findById(newMessage._id)
+    .populate("from", "name email")
+    .populate("to", "name email");
+
+  res.status(201).json({
+    status: "success",
+    message: "Message sent successfully",
+    data: populatedMessage,
+  });
+});
+
+// Get conversation history (admin/moderator)
+export const getConversationHistory = expressAsyncHandler(async (req, res, next) => {
+  const { userId } = req.params;
+  
+  const messages = await Message.find({
+    $or: [
+      { from: req.user._id, to: userId },
+      { from: userId, to: req.user._id }
+    ]
+  })
+    .populate("from", "name email")
+    .populate("to", "name email")
+    .sort({ createdAt: 1 });
+
+  res.status(200).json({
+    status: "success",
+    data: messages,
   });
 });

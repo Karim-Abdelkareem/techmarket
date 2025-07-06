@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../context/AuthContext';
 
-const AddModeratorForm = ({ onSuccess, onCancel }) => {
+const AddUserForm = ({ onSuccess, onCancel }) => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: 'mod@gmail.com',
-      password: '123456',
-      name: 'Moderator Onee',
-      brief: 'brief',
-      locationText: 'locationText',
-      locationLink: 'locationLink'
+      email: '',
+      password: '',
+      name: '',
+      brief: '',
+      locationText: '',
+      locationLink: '',
+      role: 'moderator' // Default to moderator
     }
   });
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,7 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
       formData.append('name', data.name);
       formData.append('email', data.email);
       formData.append('password', data.password);
+      formData.append('role', data.role); // Add role to form data
       formData.append('brief', data.brief || '');
       formData.append('locationText', data.locationText || '');
       formData.append('locationLink', data.locationLink || '');
@@ -44,7 +46,7 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch('http://localhost:3000/api/user', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/user', {
         method: 'POST',
         headers: {
           Authorization: token,
@@ -54,7 +56,7 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create moderator');
+        throw new Error(errorData.message || 'Failed to create user');
       }
 
       const result = await response.json();
@@ -68,7 +70,7 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800">Add New Moderator</h2>
+      <h2 className="text-xl font-semibold text-gray-800">Add New User</h2>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4">
@@ -117,6 +119,18 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Role *</label>
+          <select
+            {...register('role', { required: 'Role is required' })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            <option value="moderator">Moderator</option>
+            <option value="admin">Admin</option>
+          </select>
+          {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>}
         </div>
 
         <div>
@@ -176,11 +190,11 @@ const AddModeratorForm = ({ onSuccess, onCancel }) => {
           className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           disabled={loading}
         >
-          {loading ? 'Creating...' : 'Create Moderator'}
+          {loading ? 'Creating...' : 'Create User'}
         </button>
       </div>
     </form>
   );
 };
 
-export default AddModeratorForm;
+export default AddUserForm;
