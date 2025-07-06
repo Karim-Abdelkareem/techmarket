@@ -9,6 +9,8 @@ import cartRouter from "./src/modules/cart/cartRouter.js";
 import userRouter from "./src/modules/user/userRouter.js";
 import analyticsRouter from "./src/modules/analytics/analyticsRouter.js";
 import reservationRouter from "./src/modules/reservation/reservationRouter.js";
+import tradeinRouter from "./src/modules/tradein/tradeinRouter.js";
+import messageRouter from "./src/modules/messages/messageRouter.js";
 // import categoryRouter from "./src/modules/category/categoryRouter.js";
 // import mobilesRouter from "./src/modules/mobiles/mobilesRouter.js";
 // import accessoryRouter from "./src/modules/accessories/accessoryRouter.js";
@@ -30,6 +32,8 @@ export const init = (app) => {
   app.use("/api/user", userRouter);
   app.use("/api/reservation", reservationRouter);
   app.use("/api/analytics", analyticsRouter);
+  app.use("/api/tradein", tradeinRouter);
+  app.use("/api/messages", messageRouter);
   // app.use("/api/category", categoryRouter);
   // app.use("/api/mobiles", mobilesRouter);
   // app.use("/api/accessory", accessoryRouter);

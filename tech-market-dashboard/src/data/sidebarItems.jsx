@@ -58,4 +58,29 @@ export const sidebarItems = [
             { title: "MacBook", icon: "🍎", path: "/dashboard/category/laptops/macbook" },
         ],
     },
+    {
+        title: "Gaming",
+        icon: "🎮",
+        children: [
+            { title: "Games", icon: "🕹️", path: "/dashboard/category/gaming/games" },
+            { title: "Accounts", icon: "👤", path: "/dashboard/category/gaming/accounts" },
+            { title: "PlayStation", icon: "🎮", path: "/dashboard/category/gaming/playstation" },
+            { title: "Controller", icon: "🎮", path: "/dashboard/category/gaming/controller" },
+            { title: "Skin", icon: "🎨", path: "/dashboard/category/gaming/skin" },
+        ],
+    },
+    {
+        title: "Trade-in",
+        icon: "♻️",
+        children: [
+            { title: "Requests", icon: "📦", path: "/dashboard/tradein/requests" },
+        ],
+    },
+    {
+        title: "Reservations",
+        icon: "📅",
+        children: [
+            { title: "Requests", icon: "📋", path: "/dashboard/reservations/requests" },
+        ],
+    },
 ];

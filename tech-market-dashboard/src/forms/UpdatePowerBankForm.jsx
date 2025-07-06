@@ -79,7 +79,7 @@ export default function UpdatePowerBankForm({ product, onClose }) {
     const token = localStorage.getItem('token'); 
 
     try {
-      const response = await fetch(`http://127.0.0.1:3000/api/product/${product._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/product/${product._id}`, {
         method: 'PATCH',
         body: formData,
         headers: {

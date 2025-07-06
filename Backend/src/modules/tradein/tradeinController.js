@@ -140,3 +140,43 @@ export const changeTradeInStatus = expressAsyncHandler(
     });
   }
 );
+
+// 7. Approve/Reject Trade-In Request (Admin/Moderator)
+export const approveTradeInRequest = expressAsyncHandler(
+  async (req, res, next) => {
+    const { tradeInId, status, adminNotes } = req.body;
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Status must be either 'approved' or 'rejected'",
+      });
+    }
+
+    const tradeIn = await TradeIn.findByIdAndUpdate(
+      tradeInId,
+      {
+        status,
+        adminNotes: adminNotes || "",
+        reviewedBy: req.user._id,
+        reviewedAt: new Date(),
+      },
+      { new: true }
+    )
+      .populate("user", "name email")
+      .populate("replacement", "title");
+
+    if (!tradeIn) {
+      return res.status(404).json({
+        status: "error",
+        message: "Trade-in request not found",
+      });
+    }
+
+    res.json({
+      status: "success",
+      message: `Trade-in request ${status} successfully`,
+      data: tradeIn,
+    });
+  }
+);

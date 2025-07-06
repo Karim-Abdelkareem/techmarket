@@ -19,10 +19,7 @@ const uploadFelds = [
 
 router
   .route("/")
-  .get(
-    protect, // Add protection to get products route
-    productController.getProducts
-  )
+  .get(productController.getProducts)
   .post(
     protect,
     restrictTo("moderator", "admin"),

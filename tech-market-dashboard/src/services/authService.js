@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Create an axios instance with base URL
-const API_URL = "http://localhost:3000/api/auth";
+const API_URL = "https://techmarket-lovat.vercel.app/api/auth";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -70,7 +70,7 @@ export const authService = {
       if (!token) throw new Error("No authentication token");
 
       const response = await axios.get(
-        "http://localhost:3000/api/v1/users/profile",
+        "https://techmarket-lovat.vercel.app/api/v1/users/profile",
         {
           headers: { Authorization: token },
         }

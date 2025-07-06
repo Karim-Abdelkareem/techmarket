@@ -66,10 +66,6 @@ export const categoryConfig = {
         title: "Professional",
         apiEndpoint: "/api/products?productType=professional",
       },
-      gaming: {
-        title: "Gaming",
-        apiEndpoint: "/api/products?productType=gaming",
-      },
       x360: {
         title: "X360",
         apiEndpoint: "/api/products?productType=x360",
@@ -81,6 +77,31 @@ export const categoryConfig = {
       macbook: {
         title: "MacBook",
         apiEndpoint: "/api/products?productType=macbook",
+      },
+    },
+  },
+  gaming: {
+    title: "Gaming",
+    children: {
+      games: {
+        title: "Games",
+        apiEndpoint: "/api/products?category=gaming&subType=Games",
+      },
+      accounts: {
+        title: "Accounts",
+        apiEndpoint: "/api/products?category=gaming&subType=Accounts",
+      },
+      playstation: {
+        title: "PlayStation",
+        apiEndpoint: "/api/products?category=gaming&subType=PlayStation",
+      },
+      controller: {
+        title: "Controller",
+        apiEndpoint: "/api/products?category=gaming&subType=Controller",
+      },
+      skin: {
+        title: "Skin",
+        apiEndpoint: "/api/products?category=gaming&subType=Skin",
       },
     },
   },
