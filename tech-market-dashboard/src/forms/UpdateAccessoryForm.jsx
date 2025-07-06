@@ -54,7 +54,7 @@ export default function UpdateAccessoryForm({ product, onClose }) {
 
     try {
       console.log('Updating accessory data...');
-      const response = await fetch(`http://127.0.0.1:3000/api/accessories/${product._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/accessories/${product._id}`, {
         method: 'PATCH',
         body: formData,
         headers: {

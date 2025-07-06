@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin", "moderator"],
       default: "user",
     },
-    breif: {
+    brief: {
       type: String,
     },
     logo: {
@@ -65,10 +65,10 @@ const userSchema = new mongoose.Schema(
     //   type: String,
     //   default: "",
     // },
-    // phone: {
-    //   type: String,
-    //   default: "",
-    // },
+    phone: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

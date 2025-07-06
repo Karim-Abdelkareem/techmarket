@@ -6,6 +6,7 @@ import {
   getUserTradeIns,
   getStoreTradeIns,
   changeTradeInStatus,
+  approveTradeInRequest,
 } from "./tradeinController.js";
 import { protect, restrictTo } from "../../middleware/authorization.js"; // Uncomment if you have auth middleware
 
@@ -32,4 +33,13 @@ router.get("/store", protect, getStoreTradeIns);
 // change trade-in status
 router.put("/status", protect, changeTradeInStatus);
 
+// Approve/Reject trade-in request (Admin/Moderator)
+router.put(
+  "/approve",
+  protect,
+  restrictTo("admin", "moderator"),
+  approveTradeInRequest
+);
+
 export default router;
+

@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import { AppError } from "../../utils/appError.js";
 import { Features } from "../../utils/features.js";
 
-export const createModerator = expressAsyncHandler(async (req, res, next) => {
+export const createUser = expressAsyncHandler(async (req, res, next) => {
   const {
     email,
     password,
@@ -12,6 +12,7 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
     brief,
     locationText,
     locationLink,
+    role,
   } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -22,6 +23,9 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
     logo = req.file.path;
   }
 
+  const validRoles = ['moderator', 'admin'];
+  const userRole = role && validRoles.includes(role) ? role : 'moderator';
+
   const newUser = await User.create({
     email,
     password,
@@ -30,14 +34,14 @@ export const createModerator = expressAsyncHandler(async (req, res, next) => {
     logo,
     brief,
     location: {
-      locationText,
-      locationLink,
+      text: locationText,
+      link: locationLink,
     },
-    role: "moderator",
+    role: userRole,
   });
   res
     .status(201)
-    .json({ message: "Moderator created successfully", data: newUser });
+    .json({ message: `${userRole.charAt(0).toUpperCase() + userRole.slice(1)} created successfully`, data: newUser });
 });
 
 export const getAllUsers = expressAsyncHandler(async (req, res, next) => {
@@ -81,6 +85,24 @@ export const updateSingleUser = expressAsyncHandler(async (req, res, next) => {
 
   if (req.file) {
     req.body.logo = req.file.path;
+  }
+
+  // Handle location data properly
+  if (req.body.locationText || req.body.locationLink) {
+    req.body.location = {
+      text: req.body.locationText,
+      link: req.body.locationLink,
+    };
+    delete req.body.locationText;
+    delete req.body.locationLink;
+  }
+
+  // Validate role if it's being updated
+  if (req.body.role) {
+    const validRoles = ['user', 'moderator', 'admin'];
+    if (!validRoles.includes(req.body.role)) {
+      return next(new AppError("Invalid role", 400));
+    }
   }
 
   const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {

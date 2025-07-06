@@ -7,7 +7,7 @@ const EditDealerForm = ({ dealer, onSuccess, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(dealer.logo ? `http://localhost:3000/${dealer.logo}` : null);
+  const [logoPreview, setLogoPreview] = useState(dealer.logo ? `https://techmarket-lovat.vercel.app/${dealer.logo}` : null);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const EditDealerForm = ({ dealer, onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch(`http://localhost:3000/api/dealer/${dealer._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/dealer/${dealer._id}`, {
         method: 'PATCH',
         headers: {
           Authorization: token,
