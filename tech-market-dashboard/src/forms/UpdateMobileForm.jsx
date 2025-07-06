@@ -72,7 +72,7 @@ export default function UpdateMobileForm({ product, onClose }) {
 
     try {
       console.log('Updating product data...');
-      const response = await fetch(`http://127.0.0.1:3000/api/product/${product._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/product/${product._id}`, {
         method: 'PATCH',
         body: formData,
         headers: {

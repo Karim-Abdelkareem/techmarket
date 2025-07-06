@@ -66,7 +66,7 @@ export default function AddInEarForm() {
 
     try {
       console.log('Submitting in-ear headphones data...');
-      const response = await fetch('http://127.0.0.1:3000/api/product', {
+      const response = await fetch('https://techmarket-lovat.vercel.app/api/product', {
         method: 'POST',
         body: formData,
         headers: {

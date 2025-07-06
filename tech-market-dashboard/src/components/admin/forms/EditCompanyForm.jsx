@@ -7,7 +7,7 @@ const EditCompanyForm = ({ company, onSuccess, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(company.logo ? `http://localhost:3000/${company.logo}` : null);
+  const [logoPreview, setLogoPreview] = useState(company.logo ? `https://techmarket-lovat.vercel.app/${company.logo}` : null);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const EditCompanyForm = ({ company, onSuccess, onCancel }) => {
         formData.append('logo', logoFile);
       }
 
-      const response = await fetch(`http://localhost:3000/api/dealer/${company._id}`, {
+      const response = await fetch(`https://techmarket-lovat.vercel.app/api/dealer/${company._id}`, {
         method: 'PUT',
         headers: {
           Authorization: token,
